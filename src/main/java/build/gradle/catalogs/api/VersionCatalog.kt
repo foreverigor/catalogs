@@ -13,6 +13,8 @@ interface VersionCatalog {
 //    @JvmDefaultWithoutCompatibility
 //    fun catalog(catalogPrefix: String) {}
 
+    val prefix: String
+
     fun catalog(catalogPrefix: String, catalogConsumer: Consumer<VersionCatalog>)
 
     fun catalog(catalogPrefix: String, catalogConsumer: VersionCatalog.() -> Unit)
@@ -24,13 +26,16 @@ interface VersionCatalog {
      */
     fun library(nestedAlias: String, group: String, artifact: String): VersionCatalogBuilder.LibraryAliasBuilder
 
-    fun library(nestedAlias: String, group: String, artifact: String, withoutVersion: Boolean = false): HybridLibraryLink
+    fun library(nestedAlias: String, group: String, artifact: String, withoutVersion: Boolean = false): NoVersionLibraryLink
 
     fun plugin(nestedAlias: String, id: String): VersionCatalogBuilder.PluginAliasBuilder
 
     fun plugin(nestedAlias: String, id: String, version: String): PluginLink
 
+    // Links
+    fun plugin(nestedAlias: String, pluginLink: PluginLink)
 
-    val prefix: String
+    fun library(nestedAlias: String, libraryLink: LibraryLink)
+
 } // interface VersionCatalog
 

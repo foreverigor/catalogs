@@ -77,9 +77,3 @@ object Catalogs {
 
 } // object Catalogs
 
-private fun VersionCatalog.plugin(nestedAlias: String, id: PluginLink) {
-}
-
-private fun VersionCatalog.library(nestedAlias: String, groupArtifactVersion: LibraryLink) {
-}
-
