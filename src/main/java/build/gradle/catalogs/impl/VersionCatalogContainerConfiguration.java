@@ -24,10 +24,10 @@ public class VersionCatalogContainerConfiguration implements VersionCatalogConta
     @Override
     public void catalog(@NotNull String catalogPrefix, @NotNull Function1<? super VersionCatalog, Unit> catalogConsumer) {
         String[] packages = splitPrefix(catalogPrefix);
-        String catalogName = packages[0];
-        String aliasPrefix = packages.length > 1 ? catalogPrefix.substring(catalogName.length() + 1) : "";
+        String topLevelCatalogName = packages[0];
+        String aliasPrefix = packages.length > 1 ? catalogPrefix.substring(topLevelCatalogName.length() + 1) : "";
 
-        catalogs.apply(catalogName).accept(catalog -> {
+        catalogs.apply(topLevelCatalogName).accept(catalog -> {
             catalogConsumer.invoke(new PrefixVersionCatalog(catalog, new StringBuilder(aliasPrefix)));
         });
     }

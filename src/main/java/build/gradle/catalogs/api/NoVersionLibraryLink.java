@@ -2,9 +2,9 @@ package build.gradle.catalogs.api;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface NoVersionLibraryLink extends LibraryLink {
+public interface NoVersionLibraryLink extends LibraryAlias {
 
     @NotNull
-    LibraryLink version(@NotNull String version);
+    LibraryAlias version(@NotNull String version);
 
 }

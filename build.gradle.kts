@@ -1,7 +1,9 @@
 plugins {
     java
     `java-gradle-plugin`
+    // `kotlin-dsl` // don't add this, does stuff to syntax
     kotlin("jvm") version embeddedKotlinVersion
+    `version-catalog` // for reference
 }
 
 group = "me.foreverigor"
@@ -15,6 +17,18 @@ gradlePlugin {
     plugins.register("catalogs-plugin") {
         id = "catalogs-plugin"
         implementationClass = "build.gradle.CatalogsPlugin"
+    }
+}
+
+catalog {
+    versionCatalog {
+        version("kotlin2", "1.0.0")
+    }
+    versionCatalog {
+        version("kotlin", "1.0.0")
+        // add dependencies and aliases here
+        library("alias", "group", "artifact").version("version")
+//        alias("<alias name>").to("<group-id>", "<artifact-id>").version("<version code>")
     }
 }
 

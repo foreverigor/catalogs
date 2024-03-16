@@ -1,17 +1,22 @@
 package build.gradle.catalogs.impl;
 
-import build.gradle.catalogs.api.NoVersionLibraryLink;
-import build.gradle.catalogs.api.LibraryLink;
-import build.gradle.catalogs.api.PluginLink;
+import build.gradle.CatalogsPlugin;
+import build.gradle.catalogs.api.LibraryAlias;
+import build.gradle.catalogs.api.PluginAlias;
 import build.gradle.catalogs.api.VersionCatalog;
+import build.gradle.catalogs.link.DefaultLibraryAlias;
+import build.gradle.catalogs.link.DefaultPluginAlias;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.util.function.Consumer;
 
 public class PrefixVersionCatalog implements VersionCatalog {
+
+    private static final Logger logger = CatalogsPlugin.Companion.getLogger();
     private final VersionCatalogBuilder realCatalog;
     private final StringBuilder myPrefix;
 
@@ -27,7 +32,7 @@ public class PrefixVersionCatalog implements VersionCatalog {
 
     @Override
     public void catalog(@NotNull String nestedPrefix, Consumer<VersionCatalog> catalogConsumer) {
-        catalogConsumer.accept(new PrefixVersionCatalog(realCatalog, new StringBuilder(myPrefix).append(nestedPrefix)));
+        catalogConsumer.accept(new PrefixVersionCatalog(realCatalog, new StringBuilder(alias(nestedPrefix))));
     }
 
     @Override
@@ -37,55 +42,66 @@ public class PrefixVersionCatalog implements VersionCatalog {
 
     @Override
     public @NotNull VersionCatalogBuilder.LibraryAliasBuilder library(@NotNull String nestedAlias, @NotNull String group, @NotNull String artifact) {
-        System.out.println("registered library alias " + alias(nestedAlias) + " in catalog " + realCatalog.getName());
-        return realCatalog.library(alias(nestedAlias), group, artifact);
-    }
-
-    @NotNull
-    @Override
-    public NoVersionLibraryLink library(@NotNull String nestedAlias, @NotNull String group, @NotNull String artifact, boolean withoutVersion) {
-        if (!withoutVersion) {
-            realCatalog.library(alias(nestedAlias), artifact); // Will fail, interface allows such a definition, doesn't mean it's going to give a meaningful result
-        } else { // Actual reason this method exists:
-            realCatalog.library(alias(nestedAlias), group, artifact).withoutVersion();
-        }
-        LibraryLink idRef = new LibraryLink() {};
-        return version -> idRef;
+        var library = realCatalog.library(alias(nestedAlias), group, artifact);
+        logRegistration(nestedAlias, DefaultLibraryAlias.create(group, artifact));
+        return library;
     }
 
     @NotNull
     private String alias(String nestedAlias) {
-        return myPrefix + "." + nestedAlias;
-    }
-
-    @Override
-    public @NotNull LibraryLink library(@NotNull String nestedAlias, @NotNull String groupArtifactVersion) {
-        System.out.println("registered library alias " + alias(nestedAlias) + " in catalog " + realCatalog.getName());
-        realCatalog.library(alias(nestedAlias), groupArtifactVersion);
-        return new LibraryLink() {};
-    }
-
-    @Override
-    public @NotNull VersionCatalogBuilder.PluginAliasBuilder plugin(@NotNull String nestedAlias, @NotNull String id) {
-        System.out.println("registered plugin alias " + alias(nestedAlias) + " in catalog " + realCatalog.getName());
-        return realCatalog.plugin(alias(nestedAlias), id);
+        return myPrefix.isEmpty() ? nestedAlias : myPrefix + "." + nestedAlias; // Differentiate between toplevel and nested
     }
 
     @NotNull
     @Override
-    public PluginLink plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull String version) {
+    public LibraryAlias library(@NotNull String nestedAlias, @NotNull String group, @NotNull String artifact, @NotNull String version) {
+        LibraryAlias link;
+        if (version.isEmpty()) {
+            realCatalog.library(alias(nestedAlias), group, artifact).withoutVersion();
+            link = DefaultLibraryAlias.create(group, artifact);
+        } else {
+            realCatalog.library(alias(nestedAlias), group + ":" + artifact + ":" + version);
+            link = DefaultLibraryAlias.create(group, artifact, version);
+        }
+        logRegistration(nestedAlias, link);
+        return link;
+    }
+
+    @Override
+    public @NotNull LibraryAlias library(@NotNull String nestedAlias, @NotNull String groupArtifactVersion) {
+        realCatalog.library(alias(nestedAlias), groupArtifactVersion);
+        logRegistration(nestedAlias, "library " + groupArtifactVersion);
+        return DefaultLibraryAlias.create(groupArtifactVersion);
+    }
+
+    @Override
+    public @NotNull VersionCatalogBuilder.PluginAliasBuilder plugin(@NotNull String nestedAlias, @NotNull String id) {
+        var plugin = realCatalog.plugin(alias(nestedAlias), id);
+        logRegistration(nestedAlias, "plugin " + id);
+        return plugin;
+    }
+
+    @NotNull
+    @Override
+    public PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull String version) {
         plugin(nestedAlias, id).version(version);
-        return new PluginLink() {};
+        return new DefaultPluginAlias(id, version);
     }
 
     @Override
-    public void plugin(@NotNull String nestedAlias, @NotNull PluginLink pluginLink) {
-
+    public void plugin(@NotNull String nestedAlias, @NotNull PluginAlias pluginLink) {
+        pluginLink.register(alias(nestedAlias), realCatalog);
+        logRegistration(nestedAlias, pluginLink);
     }
 
     @Override
-    public void library(@NotNull String nestedAlias, @NotNull LibraryLink libraryLink) {
+    public void library(@NotNull String nestedAlias, @NotNull LibraryAlias libraryLink) {
+        libraryLink.register(alias(nestedAlias), realCatalog);
+        logRegistration(nestedAlias, libraryLink);
+    }
 
+    private void logRegistration(String nestedAlias, Object aliasTarget) {
+        logger.info("registered alias {} for {} in catalog {}", alias(nestedAlias), aliasTarget, realCatalog.getName());
     }
 
 } // class PrefixVersionCatalog

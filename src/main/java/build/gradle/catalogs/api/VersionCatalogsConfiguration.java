@@ -1,6 +1,8 @@
 package build.gradle.catalogs.api;
 
+import build.gradle.CatalogsPlugin;
 import build.gradle.catalogs.impl.VersionCatalogContainerConfiguration;
+import org.gradle.api.Named;
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
 import org.gradle.api.initialization.resolve.MutableVersionCatalogContainer;
 import org.jetbrains.annotations.NotNull;
@@ -12,13 +14,20 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface VersionCatalogsConfiguration extends Consumer<VersionCatalogContainer> {
+public interface VersionCatalogsConfiguration extends Consumer<VersionCatalogContainer>, Named {
 
     void configure(@NotNull VersionCatalogContainer catalogContainer);
 
     @Override
     default void accept(VersionCatalogContainer catalogContainer) {
+        if (!getName().isEmpty()) CatalogsPlugin.Companion.getLogger().info("registering catalogs \"{}\"", getName());
         configure(catalogContainer);
+    }
+
+    @NotNull
+    @Override
+    default String getName() {
+        return "";
     }
 
     default void configure(MutableVersionCatalogContainer catalogs) {

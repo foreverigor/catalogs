@@ -40,3 +40,5 @@ gen/
 
 # Ignored .idea, now unignore specific stuff
 !.idea/.gitignore
+consumer/.idea
+consumer/gradle

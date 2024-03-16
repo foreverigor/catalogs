@@ -19,23 +19,23 @@ interface VersionCatalog {
 
     fun catalog(catalogPrefix: String, catalogConsumer: VersionCatalog.() -> Unit)
 
-    fun library(nestedAlias: String, groupArtifactVersion: String): LibraryLink
+    fun library(nestedAlias: String, groupArtifactVersion: String): LibraryAlias
+
+    fun library(nestedAlias: String, group: String, artifact: String, version: String = ""): LibraryAlias
 
     /**
      * "classic" version
      */
     fun library(nestedAlias: String, group: String, artifact: String): VersionCatalogBuilder.LibraryAliasBuilder
 
-    fun library(nestedAlias: String, group: String, artifact: String, withoutVersion: Boolean = false): NoVersionLibraryLink
-
     fun plugin(nestedAlias: String, id: String): VersionCatalogBuilder.PluginAliasBuilder
 
-    fun plugin(nestedAlias: String, id: String, version: String): PluginLink
+    fun plugin(nestedAlias: String, id: String, version: String): PluginAlias
 
     // Links
-    fun plugin(nestedAlias: String, pluginLink: PluginLink)
+    fun library(nestedAlias: String, libraryAlias: LibraryAlias)
 
-    fun library(nestedAlias: String, libraryLink: LibraryLink)
+    fun plugin(nestedAlias: String, pluginAlias: PluginAlias)
 
 } // interface VersionCatalog
 

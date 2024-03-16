@@ -14,4 +14,8 @@ public interface JavaKotlinInterop {
         };
     }
 
+    static <T> Consumer<T> toJavaConsumer(Function1<? super T, Unit> kFunc) {
+        return kFunc::invoke;
+    }
+
 } // interface JavaKotlinInterop

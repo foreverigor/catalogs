@@ -6,6 +6,7 @@ import java.util.function.Consumer
  * gradle api equivalent is [org.gradle.api.initialization.resolve.MutableVersionCatalogContainer]
  */
 interface VersionCatalogContainer {
+
     fun catalog(catalogName: String)
 
     fun catalog(catalogName: String, catalogConsumer: VersionCatalog.() -> Unit)

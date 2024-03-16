@@ -1,13 +1,13 @@
 package build.gradle.catalogs
 
-import build.gradle.catalogs.api.*
+import build.gradle.catalogs.api.VersionCatalogsConfiguration
 import org.gradle.api.initialization.resolve.MutableVersionCatalogContainer
 import java.util.function.Consumer
 
 @Suppress("MemberVisibilityCanBePrivate")
-object Catalogs {
+object Catalogs : CatalogsSupport() {
 
-    val aliases = catalogs {
+    val aliases = catalogs("aliases") {
         catalog("spring") {
             // will be called spring.plugins.springBoot
             plugin("springBoot", springBootPlugin)
@@ -22,11 +22,11 @@ object Catalogs {
         } // catalog("spring")
 
         catalog("junit") {
-
+            library("jupiter", junitJupiter)
         }
-    } // val aliases
+    } // aliases
 
-    val coordinates = catalogs {
+    val coordinates = catalogs("coordinates") {
         catalog("org") {
             catalog("jetbrains") {
                 catalog("kotlin") {
@@ -34,15 +34,16 @@ object Catalogs {
                 }
             }
             catalog("springframework.boot") {
-                springBootWeb = library("web", prefix, "spring-boot-starter-web", withoutVersion = true)
-                springBootWebflux = library("webflux", prefix, "spring-boot-starter-webflux", withoutVersion = true)
-                springBootTest = library("test", prefix, "spring-boot-starter-test", withoutVersion = true)
-                springBootActuator = library("actuator", prefix, "spring-boot-starter-actuator", withoutVersion = true)
-                springBootPlugin = plugin("gradlePlugin", prefix, "3.2.2")
+                springBootPlugin = plugin("gradlePlugin", prefix, "3.2.3")
+
+                springBootWeb = library("web", prefix, "spring-boot-starter-web", withoutVersion)
+                springBootWebflux = library("webflux", prefix, "spring-boot-starter-webflux", withoutVersion)
+                springBootTest = library("test", prefix, "spring-boot-starter-test", withoutVersion)
+                springBootActuator = library("actuator", prefix, "spring-boot-starter-actuator", withoutVersion)
             }
         }
         catalog("org.junit") {
-            library("jupiter", "org.junit.jupiter", "junit-jupiter").withoutVersion() // FIXME
+            junitJupiter = library("jupiter", "org.junit.jupiter", "junit-jupiter", withoutVersion)
             library("bom", "org.junit:junit-bom:5.9.1")
         }
         catalog("io") {
@@ -53,23 +54,19 @@ object Catalogs {
                 library("test", prefix, "reactor-test").withoutVersion()
             }
         }
-    } // val coordinates
+    } // coordinates
 
-    // Shared:
-    private val libraries: MutableMap<String, LibraryLink> = mutableMapOf()
-    private val plugins: MutableMap<String, PluginLink> = mutableMapOf()
+    // Shared between catalogs (links):
+    private var springBootPlugin by plugins
+    private var springDependencyManagement by plugins
 
-    var springBootWeb by libraries
-    var springBootWebflux by libraries
-    var springBootTest by libraries
-    var springBootActuator by libraries
-    var springBootPlugin by plugins
-    var springDependencyManagement by plugins
-    private fun catalogs(conf: VersionCatalogContainer.() -> Unit): VersionCatalogsConfiguration {
-        return VersionCatalogsConfiguration(conf)
-    }
+    private var springBootWeb by libs
+    private var springBootWebflux by libs
+    private var springBootTest by libs
+    private var springBootActuator by libs
+    private var junitJupiter by libs
 
-    private val configs: Set<VersionCatalogsConfiguration> = setOf(coordinates, aliases)
+    val configs: List<VersionCatalogsConfiguration> = listOf(coordinates, aliases)
 
     val catalogsConfig = Consumer { catalogs: MutableVersionCatalogContainer ->
         configs.forEach(Consumer { it.configure(catalogs) })
