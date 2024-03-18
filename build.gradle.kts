@@ -14,9 +14,9 @@ repositories {
 }
 
 gradlePlugin {
-    plugins.register("catalogs-plugin") {
-        id = "catalogs-plugin"
-        implementationClass = "build.gradle.CatalogsPlugin"
+    plugins.register("catalogue-plugin") {
+        id = "me.foreverigor.gradle.catalogue"
+        implementationClass = "me.foreverigor.gradle.CatalogsPlugin"
     }
 }
 

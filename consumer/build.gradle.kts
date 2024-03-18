@@ -1,6 +1,7 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("java")
+    // kotlin("jvm") version "1.9.23"
 
     alias(spring.plugins.springBoot)
     alias(spring.plugins.dependencyManagement)

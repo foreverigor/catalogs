@@ -1,23 +1,31 @@
-import build.gradle.catalogCatalogs
-import build.gradle.catalogs.DefaultVersions
+import me.foreverigor.gradle.catalogs.gradleCatalogue
 
 rootProject.name = "catalogs-consumer"
 
 pluginManagement {
     includeBuild("../")
-    plugins {
-        kotlin("jvm") version "1.9.22"
-    }
 }
 
 plugins {
-    id("catalogs-plugin")
+    id("me.foreverigor.gradle.catalogue")
 //    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
-object MyVersions : DefaultVersions() {
+
+apply(plugin = buildGradleKordampPluginId)
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("gradleBuild") {
+            plugin("kordamp", "kordamp.plugin").version("latest.release")
+        }
+    }
+}
+
+apply(from = "versions.settins.gradle.kts")
+object MyVersions : me.foreverigor.gradle.catalogs.DefaultVersions() {
     override var SpringBoot = SpringBootPlugin
 }
 
-catalogCatalogs {
+gradleCatalogue {
     versions = MyVersions
 }
