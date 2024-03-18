@@ -1,13 +1,14 @@
 package build.gradle.catalogs.impl;
 
 import build.gradle.CatalogsPlugin;
+import build.gradle.catalogs.DefaultVersions;
+import build.gradle.catalogs.api.DependencyAlias;
 import build.gradle.catalogs.api.LibraryAlias;
 import build.gradle.catalogs.api.PluginAlias;
 import build.gradle.catalogs.api.VersionCatalog;
-import build.gradle.catalogs.link.DefaultLibraryAlias;
-import build.gradle.catalogs.link.DefaultPluginAlias;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
+import kotlin.reflect.KProperty1;
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -18,21 +19,34 @@ public class PrefixVersionCatalog implements VersionCatalog {
 
     private static final Logger logger = CatalogsPlugin.Companion.getLogger();
     private final VersionCatalogBuilder realCatalog;
-    private final StringBuilder myPrefix;
 
-    public PrefixVersionCatalog(VersionCatalogBuilder catalog, StringBuilder aliasPrefix) {
+    protected final String myPrefix;
+
+    public PrefixVersionCatalog(VersionCatalogBuilder catalog, String aliasPrefix) {
         this.realCatalog = catalog;
         this.myPrefix = aliasPrefix;
     }
 
     @Override
     public @NotNull String getPrefix() {
-        return realCatalog.getName() + "." + myPrefix;
+        return myPrefix.isEmpty() ? realCatalog.getName() : realCatalog.getName() + "." + myPrefix;
+    }
+
+    @NotNull
+    @Override
+    public VersionCatalogBuilder getRealCatalog() {
+        return realCatalog;
+    }
+
+    @NotNull
+    @Override
+    public CatalogGroupProvider catalog(@NotNull String catalogPrefix) {
+        return groupConsumer -> groupConsumer.invoke(new GroupVersionCatalog(realCatalog, alias(catalogPrefix)));
     }
 
     @Override
     public void catalog(@NotNull String nestedPrefix, Consumer<VersionCatalog> catalogConsumer) {
-        catalogConsumer.accept(new PrefixVersionCatalog(realCatalog, new StringBuilder(alias(nestedPrefix))));
+        catalogConsumer.accept(new PrefixVersionCatalog(realCatalog, alias(nestedPrefix)));
     }
 
     @Override
@@ -41,10 +55,8 @@ public class PrefixVersionCatalog implements VersionCatalog {
     }
 
     @Override
-    public @NotNull VersionCatalogBuilder.LibraryAliasBuilder library(@NotNull String nestedAlias, @NotNull String group, @NotNull String artifact) {
-        var library = realCatalog.library(alias(nestedAlias), group, artifact);
-        logRegistration(nestedAlias, DefaultLibraryAlias.create(group, artifact));
-        return library;
+    public void group(@NotNull String catalogPrefix, @NotNull Function1<? super Group, Unit> groupConsumer) {
+        groupConsumer.invoke(new GroupVersionCatalog(realCatalog, alias(catalogPrefix)));
     }
 
     @NotNull
@@ -55,53 +67,58 @@ public class PrefixVersionCatalog implements VersionCatalog {
     @NotNull
     @Override
     public LibraryAlias library(@NotNull String nestedAlias, @NotNull String group, @NotNull String artifact, @NotNull String version) {
-        LibraryAlias link;
-        if (version.isEmpty()) {
-            realCatalog.library(alias(nestedAlias), group, artifact).withoutVersion();
-            link = DefaultLibraryAlias.create(group, artifact);
-        } else {
-            realCatalog.library(alias(nestedAlias), group + ":" + artifact + ":" + version);
-            link = DefaultLibraryAlias.create(group, artifact, version);
-        }
-        logRegistration(nestedAlias, link);
-        return link;
+        LibraryAlias alias = version.isEmpty() ? DependencyAlias.create(group, artifact) : DependencyAlias.create(group, artifact, version);
+        alias.register(alias(nestedAlias), this);
+        return log(nestedAlias, alias);
+    }
+
+    @NotNull
+    @Override
+    public LibraryAlias library(@NotNull String nestedAlias,
+                                @NotNull String group,
+                                @NotNull String artifact,
+                                @NotNull KProperty1<DefaultVersions, String> version) {
+        var alias = DependencyAlias.create(group, artifact, version).register(alias(nestedAlias), this);
+        return log(nestedAlias, alias);
     }
 
     @Override
     public @NotNull LibraryAlias library(@NotNull String nestedAlias, @NotNull String groupArtifactVersion) {
-        realCatalog.library(alias(nestedAlias), groupArtifactVersion);
-        logRegistration(nestedAlias, "library " + groupArtifactVersion);
-        return DefaultLibraryAlias.create(groupArtifactVersion);
+        var alias = DependencyAlias.create(groupArtifactVersion).register(alias(nestedAlias), this);
+        return log(nestedAlias, alias);
     }
 
     @Override
     public @NotNull VersionCatalogBuilder.PluginAliasBuilder plugin(@NotNull String nestedAlias, @NotNull String id) {
-        var plugin = realCatalog.plugin(alias(nestedAlias), id);
-        logRegistration(nestedAlias, "plugin " + id);
-        return plugin;
+        return log(nestedAlias, realCatalog.plugin(alias(nestedAlias), id));
+    }
+
+    @NotNull
+    public PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull KProperty1<DefaultVersions, String> version) {
+        return log(nestedAlias, DependencyAlias.create(id, version).register(alias(nestedAlias), this));
     }
 
     @NotNull
     @Override
     public PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull String version) {
-        plugin(nestedAlias, id).version(version);
-        return new DefaultPluginAlias(id, version);
+        return log(nestedAlias, PluginAlias.create(id, version).register(alias(nestedAlias), this));
     }
 
     @Override
     public void plugin(@NotNull String nestedAlias, @NotNull PluginAlias pluginLink) {
-        pluginLink.register(alias(nestedAlias), realCatalog);
-        logRegistration(nestedAlias, pluginLink);
+        log(nestedAlias, pluginLink.register(alias(nestedAlias), this));
     }
 
     @Override
     public void library(@NotNull String nestedAlias, @NotNull LibraryAlias libraryLink) {
-        libraryLink.register(alias(nestedAlias), realCatalog);
-        logRegistration(nestedAlias, libraryLink);
+        log(nestedAlias, libraryLink.register(alias(nestedAlias), this));
     }
 
-    private void logRegistration(String nestedAlias, Object aliasTarget) {
-        logger.info("registered alias {} for {} in catalog {}", alias(nestedAlias), aliasTarget, realCatalog.getName());
+    private <T> T log(String nestedAlias, T aliasTarget) {
+        if (!(realCatalog instanceof Stub)) {
+            logger.info("registered alias '{}' for '{}' in catalog '{}'", alias(nestedAlias), aliasTarget, realCatalog.getName());
+        }
+        return aliasTarget;
     }
 
 } // class PrefixVersionCatalog

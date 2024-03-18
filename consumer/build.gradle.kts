@@ -23,7 +23,7 @@ dependencies {
     testImplementation(org.springframework.boot.test)
     testImplementation(io.projectreactor.test)
 
-    testImplementation(platform(org.junit.bom))
+    testImplementation(platform(org.junit.junit5))
     testImplementation(org.junit.jupiter)
 }
 

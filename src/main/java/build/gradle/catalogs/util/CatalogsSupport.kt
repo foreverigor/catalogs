@@ -1,4 +1,4 @@
-package build.gradle.catalogs
+package build.gradle.catalogs.util
 
 import build.gradle.catalogs.api.LibraryAlias
 import build.gradle.catalogs.api.PluginAlias
@@ -7,8 +7,6 @@ import build.gradle.catalogs.api.VersionCatalogsConfiguration
 import build.gradle.catalogs.link.DependencyLinks
 
 open class CatalogsSupport  {
-
-    val withoutVersion = ""
 
     protected val libs = DependencyLinks<LibraryAlias>()
     protected val plugins = DependencyLinks<PluginAlias>()

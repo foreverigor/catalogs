@@ -1,26 +1,27 @@
 package build.gradle.catalogs.link;
 
 import build.gradle.catalogs.api.PluginAlias;
-import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
+import build.gradle.catalogs.api.VersionCatalog;
+import org.jetbrains.annotations.NotNull;
 
 public class DefaultPluginAlias extends AbstractAliasLink implements PluginAlias {
 
-  private final String id;
+  private final String pluginId;
   private final String version;
 
   public DefaultPluginAlias(String id, String version) {
-    this.id = id;
+    this.pluginId = id;
     this.version = version;
   }
 
   @Override
   public String getDependencyString() {
-    return id + " version " + version;
+    return pluginId + " version " + version;
   }
 
   @Override
-  public void register(String alias, VersionCatalogBuilder catalog) {
-    catalog.plugin(alias, id).version(version);
+  public PluginAlias register(@NotNull String alias, @NotNull VersionCatalog catalog) {
+    catalog.getRealCatalog().plugin(alias, pluginId).version(version);
+    return this;
   }
-
 }

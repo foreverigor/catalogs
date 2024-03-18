@@ -28,7 +28,7 @@ public class VersionCatalogContainerConfiguration implements VersionCatalogConta
         String aliasPrefix = packages.length > 1 ? catalogPrefix.substring(topLevelCatalogName.length() + 1) : "";
 
         catalogs.apply(topLevelCatalogName).accept(catalog -> {
-            catalogConsumer.invoke(new PrefixVersionCatalog(catalog, new StringBuilder(aliasPrefix)));
+            catalogConsumer.invoke(new PrefixVersionCatalog(catalog, aliasPrefix));
         });
     }
 
