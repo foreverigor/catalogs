@@ -64,6 +64,11 @@ public class DefaultLibraryAlias extends AbstractAliasLink implements LibraryAli
     }
 
     @Override
+    public String toDependencyNotation() {
+      return getDependencyString();
+    }
+
+    @Override
     public String getDependencyString() {
       return group + ":" + artifact;
     }
@@ -80,4 +85,8 @@ public class DefaultLibraryAlias extends AbstractAliasLink implements LibraryAli
     return groupArtifactVersion;
   }
 
+  @Override
+  public String toDependencyNotation() {
+    return getDependencyString();
+  }
 } // class DefaultLibraryLink

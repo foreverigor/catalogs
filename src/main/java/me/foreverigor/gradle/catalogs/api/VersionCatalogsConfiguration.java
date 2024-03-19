@@ -2,15 +2,16 @@ package me.foreverigor.gradle.catalogs.api;
 
 import me.foreverigor.gradle.CatalogsPlugin;
 import me.foreverigor.gradle.catalogs.impl.VersionCatalogContainerConfiguration;
+import org.gradle.api.Action;
 import org.gradle.api.Named;
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
-import org.gradle.api.initialization.resolve.MutableVersionCatalogContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @FunctionalInterface
@@ -30,14 +31,12 @@ public interface VersionCatalogsConfiguration extends Consumer<VersionCatalogCon
         return "";
     }
 
-    default void configure(MutableVersionCatalogContainer catalogs) {
+    default void configure(BiConsumer<String, Action<VersionCatalogBuilder>> catalogBuilderCreator) {
         Map<String, List<Consumer<VersionCatalogBuilder>>> catalogMap = new HashMap<>();
 
         this.accept(new VersionCatalogContainerConfiguration(name -> consumer -> catalogMap.computeIfAbsent(name, n -> new ArrayList<>()).add(consumer)));
-        catalogMap.forEach((catalogName, catalogConfigs) -> {
-            catalogs.create(catalogName, catalog -> {
-                catalogConfigs.forEach(config -> config.accept(catalog));
-            });
+        catalogMap.forEach((topLevelCatalogName, configs) -> {
+            catalogBuilderCreator.accept(topLevelCatalogName, catalogBuilder -> configs.forEach(nestedCatalog -> nestedCatalog.accept(catalogBuilder)));
         });
     }
 } // interface VersionCatalogsConfiguration

@@ -2,9 +2,8 @@ package me.foreverigor.gradle.catalogs.impl
 
 import me.foreverigor.gradle.CatalogsPlugin
 import me.foreverigor.gradle.catalogs.DefaultVersions
-import me.foreverigor.gradle.catalogs.VersionRef
 import me.foreverigor.gradle.catalogs.api.VersionCatalog
-import me.foreverigor.gradle.catalogs.refName
+import kotlin.reflect.KProperty1
 
 object CatalogVersions : DefaultVersions() {
 
@@ -19,11 +18,25 @@ object CatalogVersions : DefaultVersions() {
         versionRegistrations.computeIfAbsent(version) { _ -> mutableSetOf() }.let {
             // if (catalog.realCatalogName in it) return // FIXME there is some duplicate calling going on during intellij sync
             // TODO this is related to the settings extension function being inline or not
-            val value = version.get(versionValues)
+            val value = resolveValue(version)
             catalog.realCatalog.version(version.refName, value)
             it.add(catalog.realCatalog.name)
             CatalogsPlugin.Logger.info("registered versionRef '{}' in catalog '{}' with value '{}'", version.refName, catalog.realCatalog.name, value)
         }
     } // fun registerVersion(version: VersionRef, catalog: VersionCatalog)
 
+    fun resolveValue(version: VersionRef): String = version.get(versionValues)
+
 } // object CatalogVersions
+
+typealias VersionRef = KProperty1<DefaultVersions, String> // properties are our version refs
+
+/**
+ * because we use versionRefs they can't be uppercase
+ *
+ * Solution: just make the names lowercase when we use them
+ */
+val VersionRef.refName // extension property for type alias ? 🤯
+    get() = name.lowercase()
+
+fun VersionRef.resolve() = CatalogVersions.resolveValue(this)

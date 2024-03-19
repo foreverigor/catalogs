@@ -1,9 +1,8 @@
 package me.foreverigor.gradle.catalogs.api
 
 import me.foreverigor.gradle.catalogs.DefaultVersions.Companion.withoutVersion
-import me.foreverigor.gradle.catalogs.VersionRef
+import me.foreverigor.gradle.catalogs.impl.VersionRef
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder
-import java.util.function.Consumer
 
 /**
  * gradle api equivalent is [org.gradle.api.initialization.dsl.VersionCatalogBuilder]
@@ -15,8 +14,6 @@ interface VersionCatalog {
 
     val realCatalog: VersionCatalogBuilder
     fun catalog(catalogPrefix: String): CatalogGroupProvider
-
-    fun catalog(catalogPrefix: String, catalogConsumer: Consumer<VersionCatalog>)
 
     fun catalog(catalogPrefix: String, catalogConsumer: VersionCatalog.() -> Unit)
 
@@ -39,6 +36,10 @@ interface VersionCatalog {
     fun library(nestedAlias: String, libraryAlias: LibraryAlias)
 
     fun plugin(nestedAlias: String, pluginAlias: PluginAlias)
+
+    fun bundle(nestedAlias: String, aliases: List<LibraryAlias>)
+    // if you haven't noticed the default gradle api is non-type safe, but this one is. That's because it's better
+
     interface Group : VersionCatalog {
 
         /**

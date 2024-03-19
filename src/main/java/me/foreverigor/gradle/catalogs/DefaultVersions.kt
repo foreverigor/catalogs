@@ -4,18 +4,6 @@
 )
 package me.foreverigor.gradle.catalogs
 
-import kotlin.reflect.KProperty1
-
-typealias VersionRef = KProperty1<DefaultVersions, String> // properties are our version refs
-
-/**
- * because we use versionRefs they can't be uppercase
- *
- * Solution: just make the names lowercase when we use them
- */
-val VersionRef.refName // extension property for type alias ? 🤯
-    get() = name.lowercase()
-
 open class DefaultVersions(
         // By making them open constructor properties we get the cake and eat it too: can override in subclass
         // or set in constructor
@@ -29,6 +17,7 @@ open class DefaultVersions(
         open var Logback: String = latestRelease,
 
         open var Kotlin: String = latestRelease,
+        open var KotlinX: String = latestRelease, // Doesn't follow Kotlin versioning
         open var Guava: String = latestRelease,
         open var Gson: String = latestRelease,
         open var Jackson: String = latestRelease,
@@ -68,6 +57,8 @@ open class DefaultVersions(
         open var QuarkusPlatform: String = latestRelease,
         open var QuarkusPlugin: String = latestRelease,
         open var Spark: String = latestRelease,
+        open var HelidonPlatform: String = latestRelease,
+        open var Helidon: String = withoutVersion,
 
         open var GraalVM: String = latestRelease,
 
@@ -83,13 +74,16 @@ open class DefaultVersions(
         open var Asm: String = latestRelease,
         open var Cglib: String = latestRelease,
         open var ByteBuddy: String = latestRelease,
-        open var Javassist: String = latestRelease
+        open var Javassist: String = latestRelease,
+
+        open var ToolchainsPlugin: String = latestRelease,
+        open var KordampPlugins: String = latestRelease
 ) {
     companion object {
-        const val withoutVersion = ""
         /**
          * [Gradle – Declaring Versions and Ranges](https://docs.gradle.org/current/userguide/single_versions.html)
          */
         const val latestRelease = "latest.release"
+        const val withoutVersion = ""
     }
 } // class DefaultVersions

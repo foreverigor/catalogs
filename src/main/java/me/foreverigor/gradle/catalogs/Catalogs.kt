@@ -1,10 +1,12 @@
 package me.foreverigor.gradle.catalogs
 
+import me.foreverigor.gradle.catalogs.Catalogs.Plugins.gradleToolchains
+import me.foreverigor.gradle.catalogs.Catalogs.Plugins.kordampSettings
+
+import me.foreverigor.gradle.catalogs.DefaultVersions
 import me.foreverigor.gradle.catalogs.api.VersionCatalogsConfiguration
 import me.foreverigor.gradle.catalogs.util.CatalogsSupport
-import me.foreverigor.gradle.catalogs.DefaultVersions
-import org.gradle.api.initialization.resolve.MutableVersionCatalogContainer
-import java.util.function.Consumer
+import me.foreverigor.gradle.catalogs.util.EarlyInitSupport
 import me.foreverigor.gradle.catalogs.DefaultVersions as Versions
 
 @Suppress("MemberVisibilityCanBePrivate") // No
@@ -24,7 +26,7 @@ object Catalogs : CatalogsSupport() {
             }
         } // catalog("spring")
 
-        catalog("kotlin") {
+        catalog("kotlin") { // FIXME hides the kotlin extension, rethink
             plugin("jvm", kotlinJvmPlugin)
             library("stdlib", kotlinStdlib)
             library("reflect", kotlinReflect)
@@ -36,7 +38,41 @@ object Catalogs : CatalogsSupport() {
         }
     } // aliases
 
+    val categories = catalogs("categories") {
+        catalog("logging") {
+            catalog("slf4j") {
+            }
+
+            catalog("log4") {
+            }
+
+            catalog("rainbowgum") { // New kid on the block
+            }
+        }
+    } // categories
+
     val coordinates = catalogs("coordinates") {
+        catalog("com") {
+            catalog("google") {
+                library("guava", "$prefix.guava", "guava", Versions::Guava)
+                catalog("code") {
+                    library("gson", "$prefix.gson", "gson", Versions::Gson)
+                    library("findbugs.jsr305", "$prefix.findbugs", "jsr305")
+                }
+            }
+            group("machinezoo.noexception") {
+                module("noException", "noexception", Versions::NoException)
+            }
+            group("fasterxml.jackson.core") {
+                module("databind", "jackson-databind", Versions::Jackson)
+                module("core", "jackson-core", Versions::Jackson)
+                module("annotations", "jackson-annotations", Versions::Jackson)
+            }
+            group("sparkjava") {
+                module("sparkCore", "spark-core", Versions::Spark)
+            }
+        } // catalog("com")
+
         catalog("org") {
             catalog("slf4j").group {
                 module("api", "slf4j-api", Versions::Slf4j)
@@ -49,7 +85,7 @@ object Catalogs : CatalogsSupport() {
             }
 
             catalog("jetbrains") {
-                library("annotations", prefix, "annotations", "")
+                library("annotations", prefix, "annotations", Versions::JBAnnotations)
             }
 
             catalog("jetbrains.kotlin").group {
@@ -64,9 +100,9 @@ object Catalogs : CatalogsSupport() {
             }
 
             catalog("jetbrains.kotlinx").group {
-                module("coroutinesCore", "kotlinx-coroutines-core")
-                module("coroutinesCoreJvm", "kotlinx-coroutines-core-jvm")
-                module("serializationJson", "kotlinx-serialization-json-jvm")
+                module("coroutinesCore", "kotlinx-coroutines-core", Versions::KotlinX)
+                module("coroutinesCoreJvm", "kotlinx-coroutines-core-jvm", Versions::KotlinX)
+                module("serializationJson", "kotlinx-serialization-json-jvm", Versions::KotlinX)
             }
 
             catalog("springframework").group {
@@ -124,6 +160,9 @@ object Catalogs : CatalogsSupport() {
                 }
             }
         } // catalog("org.apache")
+        catalog("org.gradle") {
+            gradleToolchains = plugin("toolchains", "org.gradle.toolchains.foojay-resolver-convention", Versions::ToolchainsPlugin)
+        }
         catalog("org.graalvm") {
             group("sdk") {
                 module("graalSdk", "graal-sdk", Versions::GraalVM)
@@ -139,6 +178,10 @@ object Catalogs : CatalogsSupport() {
                 module("rubyCommunity", "ruby-community", Versions::GraalVM)
                 module("llvmNative", "llvm-native", Versions::GraalVM)
                 module("llvmNativeCommunity", "llvm-native-community", Versions::GraalVM)
+            }
+            group("python") {
+                module("pythonLanguage", "python-language", Versions::GraalVM)
+                module("pythonLauncher", "'python-launcher", Versions::GraalVM)
             }
         } // catalog("org.graalvm")
         catalog("org.eclipse") {
@@ -172,6 +215,36 @@ object Catalogs : CatalogsSupport() {
         catalog("org.jsoup") {
             library("jsoup", prefix, "jsoup", Versions::Jsoup)
         }
+        catalog("org.kordamp") {
+            group("gradle") {
+                plugin("bom", "$prefix.bom", Versions::KordampPlugins)
+                plugin("buildInfo", "$prefix.build-info", Versions::KordampPlugins)
+                plugin("checkstyle", "$prefix.checkstyle", Versions::KordampPlugins)
+                plugin("codenarc", "$prefix.codenarc", Versions::KordampPlugins)
+                plugin("coveralls", "$prefix.coveralls", Versions::KordampPlugins)
+                plugin("errorprone", "$prefix.errorprone", Versions::KordampPlugins)
+                plugin("functionalTest", "$prefix.functional-test", Versions::KordampPlugins)
+                plugin("groovydoc", "$prefix.groovydoc", Versions::KordampPlugins)
+                plugin("guide", "$prefix.guide", Versions::KordampPlugins)
+                plugin("integrationTest", "$prefix.integration-test", Versions::KordampPlugins)
+                plugin("jacoco", "$prefix.jacoco", Versions::KordampPlugins)
+                plugin("jar", "$prefix.jar", Versions::KordampPlugins)
+                plugin("javadoc", "$prefix.javadoc", Versions::KordampPlugins)
+                plugin("licensing", "$prefix.licensing", Versions::KordampPlugins)
+                plugin("minpom", "$prefix.minpom", Versions::KordampPlugins)
+                plugin("plugin", "$prefix.plugin", Versions::KordampPlugins)
+                plugin("pmd", "$prefix.pmd", Versions::KordampPlugins)
+                plugin("project", "$prefix.project", Versions::KordampPlugins)
+                plugin("publishing", "$prefix.publishing", Versions::KordampPlugins)
+                plugin("sonar", "$prefix.sonar", Versions::KordampPlugins)
+                plugin("sourceJar", "$prefix.source-jar", Versions::KordampPlugins)
+                plugin("sourceStats", "$prefix.source-stats", Versions::KordampPlugins)
+                plugin("spotbugs", "$prefix.spotbugs", Versions::KordampPlugins)
+                plugin("testing", "$prefix.testing", Versions::KordampPlugins)
+                kordampSettings = plugin("settings", "$prefix.settings", Versions::KordampPlugins)
+
+            }
+        }
         catalog("org.javassist") {
             library("javassist", prefix, "javassist", Versions::Javassist)
         }
@@ -187,26 +260,6 @@ object Catalogs : CatalogsSupport() {
             library("byteBuddyAgent", prefix, "byte-buddy-agent", Versions::ByteBuddy)
             library("byteBuddyDep", prefix, "byte-buddy-dep", Versions::ByteBuddy)
         }
-        catalog("com") {
-            catalog("google") {
-                library("guava", "$prefix.guava", "guava", Versions::Guava)
-                catalog("code") {
-                    library("gson", "$prefix.gson", "gson", Versions::Gson)
-                    library("findbugs.jsr305", "$prefix.findbugs", "jsr305")
-                }
-            }
-            group("machinezoo.noexception") {
-                module("noException", "noexception", Versions::NoException)
-            }
-            group("fasterxml.jackson.core") {
-                module("databind", "jackson-databind", Versions::Jackson)
-                module("core", "jackson-core", Versions::Jackson)
-                module("annotations", "jackson-annotations", Versions::Jackson)
-            }
-            group("sparkjava") {
-                module("sparkCore", "spark-core", Versions::Spark)
-            }
-        } // catalog("com")
 
         catalog("io.vavr") {
             library("vavr", prefix, "vavr", Versions::Vavr)
@@ -216,12 +269,17 @@ object Catalogs : CatalogsSupport() {
             group("quarkus") {
                 plugin("gradlePlugin", prefix, Versions::QuarkusPlugin)
 
-                library("bom", "$prefix.platform", "quarkus-bom", Versions::QuarkusPlatform)
+                library("platform", "$prefix.platform", "quarkus-bom", Versions::QuarkusPlatform)
 
                 module("core", "quarkus-core", Versions::Quarkus)
                 module("arc", "quarkus-arc", Versions::Quarkus)
                 module("resteasyReactive", "quarkus-resteasy-reactive", Versions::Quarkus)
                 module("junit5", "quarkus-junit5", Versions::Quarkus)
+            }
+
+            group("helidon") {
+                module("platform", "helidon-bom", Versions::HelidonPlatform)
+                // TODO add more helidon
             }
 
             catalog("spring") {
@@ -256,7 +314,6 @@ object Catalogs : CatalogsSupport() {
         catalog("javax") {
             library("inject", "javax.inject", "javax.inject", DefaultVersions.latestRelease)
         }
-
     } // coordinates
 
     // Shared between catalogs (links):
@@ -279,11 +336,12 @@ object Catalogs : CatalogsSupport() {
     private var junitJupiter by libs
     private var junit5Bom by libs
 
-    val configs: List<VersionCatalogsConfiguration> = listOf(coordinates, aliases)
-
-    val catalogsConfig = Consumer { catalogs: MutableVersionCatalogContainer ->
-        configs.forEach(Consumer { it.configure(catalogs) })
+    object Plugins : EarlyInitSupport() {
+        var gradleToolchains by plugins
+        var kordampSettings by plugins
     }
+
+    override val catalogsConfigs: List<VersionCatalogsConfiguration> = listOf(coordinates, aliases)
 
 } // object Catalogs
 

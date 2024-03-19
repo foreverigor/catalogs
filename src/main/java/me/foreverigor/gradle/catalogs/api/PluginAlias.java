@@ -12,4 +12,8 @@ public interface PluginAlias extends DependencyAlias {
   @Override
   PluginAlias register(@NotNull String alias, @NotNull VersionCatalog catalog);
 
+  String getId();
+
+  String getVersion();
+
 }

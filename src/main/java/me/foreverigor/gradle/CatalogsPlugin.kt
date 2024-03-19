@@ -28,7 +28,7 @@ class CatalogsPlugin : Plugin<PluginAware> {
         settings.gradle.settingsEvaluated {
             val versions = settings.extensions.getByType(CatalogsPluginExtension.TYPE).versions
             Logger.info("will use {} for versions", versions::class.qualifiedName)
-            settings.dependencyResolutionManagement { Catalogs.catalogsConfig.accept(it.versionCatalogs) }
+            Catalogs.init(settings.dependencyResolutionManagement)
         }
     }
 } // class CatalogsPlugin

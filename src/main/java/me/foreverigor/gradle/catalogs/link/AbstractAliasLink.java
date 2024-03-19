@@ -8,11 +8,6 @@ public abstract class AbstractAliasLink implements DependencyAlias {
   public abstract String getDependencyString();
 
   @Override
-  public String toString() {
-    return this instanceof LibraryAlias ? "library " + getDependencyString() : "plugin " + getDependencyString();
-  }
-
-  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof AbstractAliasLink that)) return false;
@@ -23,5 +18,10 @@ public abstract class AbstractAliasLink implements DependencyAlias {
   @Override
   public int hashCode() {
     return getDependencyString().hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return this instanceof LibraryAlias ? "library " + getDependencyString() : "plugin " + getDependencyString();
   }
 }

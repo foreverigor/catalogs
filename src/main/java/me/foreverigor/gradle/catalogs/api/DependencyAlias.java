@@ -12,6 +12,11 @@ import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
  */
 public interface DependencyAlias {
 
+  DependencyAlias register(String alias, VersionCatalog catalog);
+
+  String toDependencyNotation();
+
+  // Factory methods:
   static LibraryAlias create(String groupArtifactVersion) {
     return DefaultLibraryAlias.create(groupArtifactVersion);
   }
@@ -31,8 +36,5 @@ public interface DependencyAlias {
   static LibraryAlias create(String group, String artifact, KProperty1<DefaultVersions, String> versionRef) {
     return new VersionRefLibraryAlias(group, artifact, versionRef);
   }
-
-  DependencyAlias register(String alias, VersionCatalog catalog);
-
 
 }

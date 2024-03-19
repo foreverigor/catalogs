@@ -1,5 +1,0 @@
-// package: <root>
-
-object Catalogue {
-
-}

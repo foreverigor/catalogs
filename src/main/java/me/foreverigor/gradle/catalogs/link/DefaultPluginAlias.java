@@ -5,7 +5,6 @@ import me.foreverigor.gradle.catalogs.api.VersionCatalog;
 import org.jetbrains.annotations.NotNull;
 
 public class DefaultPluginAlias extends AbstractAliasLink implements PluginAlias {
-
   private final String pluginId;
   private final String version;
 
@@ -15,13 +14,28 @@ public class DefaultPluginAlias extends AbstractAliasLink implements PluginAlias
   }
 
   @Override
+  public PluginAlias register(@NotNull String alias, @NotNull VersionCatalog catalog) {
+    catalog.getRealCatalog().plugin(alias, pluginId).version(version);
+    return this;
+  }
+
+  @Override
+  public String toDependencyNotation() {
+    return pluginId; // dependency notation is id because it is consumed in plugin block id
+  }
+
+  @Override
+  public String getId() {
+    return pluginId;
+  }
+
+  @Override
   public String getDependencyString() {
     return pluginId + " version " + version;
   }
 
   @Override
-  public PluginAlias register(@NotNull String alias, @NotNull VersionCatalog catalog) {
-    catalog.getRealCatalog().plugin(alias, pluginId).version(version);
-    return this;
+  public String getVersion() {
+    return version;
   }
 }

@@ -13,13 +13,14 @@ import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class PrefixVersionCatalog implements VersionCatalog {
 
     private static final Logger logger = CatalogsPlugin.Companion.getLogger();
-    private final VersionCatalogBuilder realCatalog;
 
+    private final VersionCatalogBuilder realCatalog;
     protected final String myPrefix;
 
     public PrefixVersionCatalog(VersionCatalogBuilder catalog, String aliasPrefix) {
@@ -32,21 +33,14 @@ public class PrefixVersionCatalog implements VersionCatalog {
         return myPrefix.isEmpty() ? realCatalog.getName() : realCatalog.getName() + "." + myPrefix;
     }
 
-    @NotNull
     @Override
-    public VersionCatalogBuilder getRealCatalog() {
+    public @NotNull VersionCatalogBuilder getRealCatalog() {
         return realCatalog;
     }
 
-    @NotNull
     @Override
-    public CatalogGroupProvider catalog(@NotNull String catalogPrefix) {
+    public @NotNull CatalogGroupProvider catalog(@NotNull String catalogPrefix) {
         return groupConsumer -> groupConsumer.invoke(new GroupVersionCatalog(realCatalog, alias(catalogPrefix)));
-    }
-
-    @Override
-    public void catalog(@NotNull String nestedPrefix, Consumer<VersionCatalog> catalogConsumer) {
-        catalogConsumer.accept(new PrefixVersionCatalog(realCatalog, alias(nestedPrefix)));
     }
 
     @Override
@@ -54,30 +48,26 @@ public class PrefixVersionCatalog implements VersionCatalog {
         catalog(catalogPrefix, (Consumer<VersionCatalog>) catalogConsumer::invoke);
     }
 
+    private void catalog(@NotNull String nestedPrefix, @NotNull Consumer<VersionCatalog> catalogConsumer) {
+        catalogConsumer.accept(new PrefixVersionCatalog(realCatalog, alias(nestedPrefix)));
+    }
+
     @Override
     public void group(@NotNull String catalogPrefix, @NotNull Function1<? super Group, Unit> groupConsumer) {
         groupConsumer.invoke(new GroupVersionCatalog(realCatalog, alias(catalogPrefix)));
     }
 
-    @NotNull
-    private String alias(String nestedAlias) {
-        return myPrefix.isEmpty() ? nestedAlias : myPrefix + "." + nestedAlias; // Differentiate between toplevel and nested
-    }
-
-    @NotNull
     @Override
-    public LibraryAlias library(@NotNull String nestedAlias, @NotNull String group, @NotNull String artifact, @NotNull String version) {
+    public @NotNull LibraryAlias library(@NotNull String nestedAlias, @NotNull String group, @NotNull String artifact, @NotNull String version) {
         LibraryAlias alias = version.isEmpty() ? DependencyAlias.create(group, artifact) : DependencyAlias.create(group, artifact, version);
-        alias.register(alias(nestedAlias), this);
-        return log(nestedAlias, alias);
+        return log(nestedAlias, alias.register(alias(nestedAlias), this));
     }
 
-    @NotNull
     @Override
-    public LibraryAlias library(@NotNull String nestedAlias,
-                                @NotNull String group,
-                                @NotNull String artifact,
-                                @NotNull KProperty1<DefaultVersions, String> version) {
+    public @NotNull LibraryAlias library(@NotNull String nestedAlias,
+                                         @NotNull String group,
+                                         @NotNull String artifact,
+                                         @NotNull KProperty1<DefaultVersions, String> version) {
         var alias = DependencyAlias.create(group, artifact, version).register(alias(nestedAlias), this);
         return log(nestedAlias, alias);
     }
@@ -93,15 +83,23 @@ public class PrefixVersionCatalog implements VersionCatalog {
         return log(nestedAlias, realCatalog.plugin(alias(nestedAlias), id));
     }
 
-    @NotNull
-    public PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull KProperty1<DefaultVersions, String> version) {
+    public @NotNull PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull KProperty1<DefaultVersions, String> version) {
         return log(nestedAlias, DependencyAlias.create(id, version).register(alias(nestedAlias), this));
     }
 
-    @NotNull
     @Override
-    public PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull String version) {
+    public @NotNull PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull String version) {
         return log(nestedAlias, PluginAlias.create(id, version).register(alias(nestedAlias), this));
+    }
+
+    @Override
+    public void bundle(@NotNull String nestedAlias, @NotNull List<? extends LibraryAlias> aliases) {
+        // TODO
+    }
+
+    @Override
+    public void library(@NotNull String nestedAlias, @NotNull LibraryAlias libraryLink) {
+        log(nestedAlias, libraryLink.register(alias(nestedAlias), this));
     }
 
     @Override
@@ -109,9 +107,8 @@ public class PrefixVersionCatalog implements VersionCatalog {
         log(nestedAlias, pluginLink.register(alias(nestedAlias), this));
     }
 
-    @Override
-    public void library(@NotNull String nestedAlias, @NotNull LibraryAlias libraryLink) {
-        log(nestedAlias, libraryLink.register(alias(nestedAlias), this));
+    private @NotNull String alias(String nestedAlias) {
+        return myPrefix.isEmpty() ? nestedAlias : myPrefix + "." + nestedAlias; // Differentiate between toplevel and nested
     }
 
     private <T> T log(String nestedAlias, T aliasTarget) {

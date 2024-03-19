@@ -1,10 +1,11 @@
 package me.foreverigor.gradle.catalogs.link
 
 import me.foreverigor.gradle.catalogs.impl.CatalogVersions
-import me.foreverigor.gradle.catalogs.VersionRef
+import me.foreverigor.gradle.catalogs.impl.VersionRef
 import me.foreverigor.gradle.catalogs.api.PluginAlias
 import me.foreverigor.gradle.catalogs.api.VersionCatalog
-import me.foreverigor.gradle.catalogs.refName
+import me.foreverigor.gradle.catalogs.impl.refName
+import me.foreverigor.gradle.catalogs.impl.resolve
 
 class VersionRefPluginAlias(private val pluginId: String, private val versionRef: VersionRef) : AbstractAliasLink(), PluginAlias {
 
@@ -15,8 +16,15 @@ class VersionRefPluginAlias(private val pluginId: String, private val versionRef
         return this
     }
 
+    override fun toDependencyNotation(): String = pluginId
+
     override fun getDependencyString(): String {
         return "$pluginId:\${${versionRef.refName}}"
     }
 
+    override fun getId(): String {
+        return pluginId
+    }
+
+    override fun getVersion(): String = versionRef.resolve()
 }
