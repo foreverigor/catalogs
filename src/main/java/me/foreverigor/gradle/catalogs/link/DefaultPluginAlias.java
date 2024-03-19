@@ -20,22 +20,7 @@ public class DefaultPluginAlias extends AbstractAliasLink implements PluginAlias
   }
 
   @Override
-  public String toDependencyNotation() {
-    return pluginId; // dependency notation is id because it is consumed in plugin block id
-  }
-
-  @Override
-  public String getId() {
-    return pluginId;
-  }
-
-  @Override
   public String getDependencyString() {
     return pluginId + " version " + version;
-  }
-
-  @Override
-  public String getVersion() {
-    return version;
   }
 }

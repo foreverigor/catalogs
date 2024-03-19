@@ -38,12 +38,18 @@ public class DefaultLibraryAlias extends AbstractAliasLink implements LibraryAli
   }
 
   @Override
+  public String getName() {
+    return normalizedName();
+  }
+
+  @Override
   public LibraryAlias register(@NotNull String alias, @NotNull VersionCatalog catalog) {
     if (artifact != null && group != null && version != null) {
       catalog.getRealCatalog().library(alias, group, artifact).version(version);
     } else {
       catalog.getRealCatalog().library(alias, groupArtifactVersion);
     }
+    rememberName(alias);
     return this;
   }
 
@@ -64,18 +70,19 @@ public class DefaultLibraryAlias extends AbstractAliasLink implements LibraryAli
     }
 
     @Override
-    public String toDependencyNotation() {
-      return getDependencyString();
-    }
-
-    @Override
     public String getDependencyString() {
       return group + ":" + artifact;
     }
 
     @Override
+    public String getName() {
+      return normalizedName();
+    }
+
+    @Override
     public LibraryAlias register(@NotNull String alias, @NotNull VersionCatalog catalog) {
       catalog.getRealCatalog().library(alias, group, artifact).withoutVersion();
+      rememberName(alias);
       return this;
     }
   } // class NoVersionLibraryAlias
@@ -85,8 +92,4 @@ public class DefaultLibraryAlias extends AbstractAliasLink implements LibraryAli
     return groupArtifactVersion;
   }
 
-  @Override
-  public String toDependencyNotation() {
-    return getDependencyString();
-  }
 } // class DefaultLibraryLink

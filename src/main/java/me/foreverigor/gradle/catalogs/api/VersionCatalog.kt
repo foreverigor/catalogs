@@ -40,6 +40,8 @@ interface VersionCatalog {
     fun bundle(nestedAlias: String, aliases: List<LibraryAlias>)
     // if you haven't noticed the default gradle api is non-type safe, but this one is. That's because it's better
 
+    fun bundle(nestedAlias: String, vararg aliases: LibraryAlias)
+
     interface Group : VersionCatalog {
 
         /**

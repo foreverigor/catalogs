@@ -41,6 +41,8 @@ object Catalogs : CatalogsSupport() {
     val categories = catalogs("categories") {
         catalog("logging") {
             catalog("slf4j") {
+                bundle("slf4jSimple", slf4jApi, slf4jImplSimple)
+                bundle("slf4jLogback", slf4jApi, logbackClassic)
             }
 
             catalog("log4") {
@@ -75,8 +77,8 @@ object Catalogs : CatalogsSupport() {
 
         catalog("org") {
             catalog("slf4j").group {
-                module("api", "slf4j-api", Versions::Slf4j)
-                module("simple", "slf4j-simple", Versions::Slf4j)
+                slf4jApi = module("api", "slf4j-api", Versions::Slf4j)
+                slf4jImplSimple = module("simple", "slf4j-simple", Versions::Slf4j)
                 module("jul", "jul-to-slf4j", Versions::Slf4j)
                 module("log4j", "log4j-over-slf4j", Versions::Slf4j)
                 module("jdk14", "slf4j-jdk14", Versions::Slf4j)
@@ -301,7 +303,7 @@ object Catalogs : CatalogsSupport() {
 
         catalog("ch.qos") {
             group("logback") {
-                module("logbackClassic", "logback-classic", Versions::Logback)
+                logbackClassic = module("logbackClassic", "logback-classic", Versions::Logback)
                 module("logbackCore", "logback-core", Versions::Logback)
             }
         }
@@ -317,6 +319,10 @@ object Catalogs : CatalogsSupport() {
     } // coordinates
 
     // Shared between catalogs (links):
+    var slf4jApi by libs
+    var slf4jImplSimple by libs
+    var logbackClassic by libs
+
     private var kotlinJvmPlugin by plugins
     private var kotlinStdlib by libs
     private var kotlinReflect by libs
@@ -341,7 +347,7 @@ object Catalogs : CatalogsSupport() {
         var kordampSettings by plugins
     }
 
-    override val catalogsConfigs: List<VersionCatalogsConfiguration> = listOf(coordinates, aliases)
+    override val catalogsConfigs: List<VersionCatalogsConfiguration> = listOf(coordinates, aliases, categories)
 
 } // object Catalogs
 
