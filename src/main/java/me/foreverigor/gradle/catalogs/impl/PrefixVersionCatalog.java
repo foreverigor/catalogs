@@ -10,9 +10,11 @@ import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class PrefixVersionCatalog implements VersionCatalog {
 
@@ -100,8 +102,8 @@ public class PrefixVersionCatalog implements VersionCatalog {
     @Override
     public void bundle(@NotNull String nestedAlias, @NotNull List<? extends LibraryAlias> aliases) {
         List<String> aliasNames = aliases.stream()
+            .map(alias -> alias.getInCatalog(this))
             .map(LibraryAlias::getName)
-            .map(s -> Objects.requireNonNull(s, "name of alias was null"))
             .toList();
         realCatalog.bundle(alias(nestedAlias), aliasNames);
         log(alias(nestedAlias), "bundle " + aliasNames);

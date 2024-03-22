@@ -11,13 +11,10 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
   Self version(String version);
   Self version(KProperty1<DefaultVersions, String> version);
 
-  default T build() {
-    throw new UnsupportedOperationException();
-  }
+  @SuppressWarnings("unused")
+  T build();
 
-  default T register(VersionCatalog catalog) {
-    throw new UnsupportedOperationException();
-  }
+  T register(VersionCatalog catalog);
 
   String getName();
 
@@ -71,10 +68,6 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
       super(name);
     }
 
-    public BundleAliasBuilder aliases(LibraryAlias... aliases) {
-      return new BundleAliasBuilder(name, version).aliases(aliases);
-    }
-
     public PluginAliasBuilder pluginId(String id) {
       return new PluginAliasBuilder(name, version).pluginId(id);
     }
@@ -86,20 +79,15 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
     public LibraryAliasBuilder artifact(String artifact) {
       return new LibraryAliasBuilder(name, version).artifact(artifact);
     }
-  }
 
-  class BundleAliasBuilder extends AbstractAliasBuilder<BundleAlias, BundleAliasBuilder> {
-
-    public BundleAliasBuilder(String name, DepVersion version) {
-      super(name, version);
-    }
-
-    public BundleAliasBuilder aliases(LibraryAlias... aliases) {
-      return self();
-    }
     @Override
-    public BundleAlias build() {
-      return super.build();
+    public DependencyAlias build() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public DependencyAlias register(VersionCatalog catalog) {
+      throw new UnsupportedOperationException();
     }
   }
 
@@ -117,15 +105,15 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
 
     @Override
     public PluginAlias build() {
-      return new PlugAlias(this);
+      return new DefaultPluginAlias(this, null);
     }
 
     @Override
     public PluginAlias register(VersionCatalog catalog) {
-      return new PlugAlias(this, catalog);
+      return new DefaultPluginAlias(this, catalog);
     }
 
-    public String getPluginId() {
+    String getPluginId() {
       return pluginId;
     }
   } // class PluginAliasBuilder
@@ -155,19 +143,19 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
 
     @Override
     public LibraryAlias build() {
-      return new LibAlias(this);
+      return new DefaultLibraryAlias(this, null);
     }
 
     @Override
     public LibraryAlias register(VersionCatalog catalog) {
-      return new LibAlias(this, catalog);
+      return new DefaultLibraryAlias(this, catalog);
     }
 
-    public String getGroup() {
+    String getGroup() {
       return group;
     }
 
-    public String getArtifact() {
+    String getArtifact() {
       return artifact;
     }
   } // class LibraryAliasBuilder

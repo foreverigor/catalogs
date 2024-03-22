@@ -1,12 +1,12 @@
 package me.foreverigor.gradle.catalogs.api;
 
-import org.gradle.api.Named;
+import org.jetbrains.annotations.NotNull;
 
-public interface LibraryAlias extends DependencyAlias, Named {
+public interface LibraryAlias extends DependencyAlias {
 
   @Override
-  default String getName() {
-    return null;
-  }
+  LibraryAlias getInCatalog(@NotNull VersionCatalog catalog);
+
+  String getName();
 
 } // interface LibraryAlias

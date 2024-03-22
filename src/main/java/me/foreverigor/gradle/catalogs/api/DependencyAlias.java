@@ -1,7 +1,7 @@
 package me.foreverigor.gradle.catalogs.api;
 
 import me.foreverigor.gradle.catalogs.alias.AliasBuilder;
-import me.foreverigor.gradle.catalogs.link.DefaultLibraryAlias;
+import me.foreverigor.gradle.catalogs.link.GavLibraryAlias;
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,14 +12,14 @@ public interface DependencyAlias {
 
   DependencyAlias register(@NotNull String alias, @NotNull VersionCatalog catalog);
 
-
+  DependencyAlias getInCatalog(@NotNull VersionCatalog catalog);
   static AliasBuilder.GenericAliasBuilder forName(String name) {
     return new AliasBuilder.GenericAliasBuilder(name);
   }
 
   // Factory methods:
-  static DefaultLibraryAlias create(String groupArtifactVersion) {
-    return new DefaultLibraryAlias(groupArtifactVersion);
+  static GavLibraryAlias create(String groupArtifactVersion) {
+    return new GavLibraryAlias(groupArtifactVersion);
   }
 
 } // interface DependencyAlias
