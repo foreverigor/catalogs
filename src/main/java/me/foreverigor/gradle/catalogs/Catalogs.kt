@@ -41,8 +41,8 @@ object Catalogs : CatalogsSupport() {
     val categories = catalogs("categories") {
         catalog("logging") {
             catalog("slf4j") {
-                bundle("slf4jSimple", slf4jApi, slf4jImplSimple)
-                bundle("slf4jLogback", slf4jApi, logbackClassic)
+                // bundle("slf4jSimple", slf4jApi, slf4jImplSimple)
+                // bundle("slf4jLogback", slf4jApi, logbackClassic)
             }
 
             catalog("log4") {

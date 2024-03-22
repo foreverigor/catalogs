@@ -1,25 +1,18 @@
 package me.foreverigor.gradle.catalogs.impl;
 
-import me.foreverigor.gradle.CatalogsPlugin;
-import me.foreverigor.gradle.catalogs.DefaultVersions;
-import me.foreverigor.gradle.catalogs.api.DependencyAlias;
-import me.foreverigor.gradle.catalogs.api.LibraryAlias;
-import me.foreverigor.gradle.catalogs.api.PluginAlias;
-import me.foreverigor.gradle.catalogs.api.VersionCatalog;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.reflect.KProperty1;
+import me.foreverigor.gradle.CatalogsPlugin;
+import me.foreverigor.gradle.catalogs.DefaultVersions;
+import me.foreverigor.gradle.catalogs.api.*;
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class PrefixVersionCatalog implements VersionCatalog {
 
@@ -64,8 +57,12 @@ public class PrefixVersionCatalog implements VersionCatalog {
 
     @Override
     public @NotNull LibraryAlias library(@NotNull String nestedAlias, @NotNull String group, @NotNull String artifact, @NotNull String version) {
-        LibraryAlias alias = version.isEmpty() ? DependencyAlias.create(group, artifact) : DependencyAlias.create(group, artifact, version);
-        return log(nestedAlias, alias.register(alias(nestedAlias), this));
+        var libraryAlias = DependencyAlias.forName(alias(nestedAlias))
+            .group(group)
+            .artifact(artifact)
+            .version(version)
+            .register(this);
+        return log(nestedAlias, libraryAlias);
     }
 
     @Override
@@ -73,28 +70,26 @@ public class PrefixVersionCatalog implements VersionCatalog {
                                          @NotNull String group,
                                          @NotNull String artifact,
                                          @NotNull KProperty1<DefaultVersions, String> version) {
-        var alias = DependencyAlias.create(group, artifact, version).register(alias(nestedAlias), this);
+        var alias = DependencyAlias.forName(alias(nestedAlias))
+            .group(group)
+            .artifact(artifact)
+            .version(version)
+            .register(this);
         return log(nestedAlias, alias);
     }
 
     @Override
+    @Deprecated
     public @NotNull LibraryAlias library(@NotNull String nestedAlias, @NotNull String groupArtifactVersion) {
-        var alias = DependencyAlias.create(groupArtifactVersion).register(alias(nestedAlias), this);
-        return log(nestedAlias, alias);
+        return log(nestedAlias, DependencyAlias.create(groupArtifactVersion).register(alias(nestedAlias), this));
     }
-
-    @Override
-    public @NotNull VersionCatalogBuilder.PluginAliasBuilder plugin(@NotNull String nestedAlias, @NotNull String id) {
-        return log(nestedAlias, realCatalog.plugin(alias(nestedAlias), id));
-    }
-
     public @NotNull PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull KProperty1<DefaultVersions, String> version) {
-        return log(nestedAlias, DependencyAlias.create(id, version).register(alias(nestedAlias), this));
+        return log(nestedAlias, DependencyAlias.forName(alias(nestedAlias)).pluginId(id).version(version).register(this));
     }
 
     @Override
     public @NotNull PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull String version) {
-        return log(nestedAlias, PluginAlias.create(id, version).register(alias(nestedAlias), this));
+        return log(nestedAlias, DependencyAlias.forName(alias(nestedAlias)).pluginId(id).version(version).register(this));
     }
 
     @Override
@@ -133,4 +128,8 @@ public class PrefixVersionCatalog implements VersionCatalog {
         return aliasTarget;
     }
 
+    @Override
+    public String toString() {
+        return "PrefixVersionCatalog{" + "prefix='" + myPrefix + '\'' + '}';
+    }
 } // class PrefixVersionCatalog

@@ -1,41 +1,25 @@
 package me.foreverigor.gradle.catalogs.api;
 
-import me.foreverigor.gradle.catalogs.DefaultVersions;
+import me.foreverigor.gradle.catalogs.alias.AliasBuilder;
 import me.foreverigor.gradle.catalogs.link.DefaultLibraryAlias;
-import me.foreverigor.gradle.catalogs.link.VersionRefLibraryAlias;
-import me.foreverigor.gradle.catalogs.link.VersionRefPluginAlias;
-import kotlin.reflect.KProperty1;
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * an abstract alias that can be registered with {@link VersionCatalogBuilder}
  */
 public interface DependencyAlias {
 
-  static AliasBuilder.GenericAliasBuilder forName(String name) {
-    return new AliasBuilder.GenericAliasBuilder();
-  }
+  DependencyAlias register(@NotNull String alias, @NotNull VersionCatalog catalog);
 
-  DependencyAlias register(String alias, VersionCatalog catalog);
+
+  static AliasBuilder.GenericAliasBuilder forName(String name) {
+    return new AliasBuilder.GenericAliasBuilder(name);
+  }
 
   // Factory methods:
-  static LibraryAlias create(String groupArtifactVersion) {
-    return DefaultLibraryAlias.create(groupArtifactVersion);
+  static DefaultLibraryAlias create(String groupArtifactVersion) {
+    return new DefaultLibraryAlias(groupArtifactVersion);
   }
 
-  static PluginAlias create(String pluginId, KProperty1<DefaultVersions, String> versionRef) {
-    return new VersionRefPluginAlias(pluginId, versionRef);
-  }
-
-  static LibraryAlias create(String group, String artifact, String version) {
-    return DefaultLibraryAlias.create(group, artifact, version);
-  }
-
-  static LibraryAlias.NoVersion create(String group, String artifact) {
-    return DefaultLibraryAlias.create(group, artifact);
-  }
-
-  static LibraryAlias create(String group, String artifact, KProperty1<DefaultVersions, String> versionRef) {
-    return new VersionRefLibraryAlias(group, artifact, versionRef);
-  }
 } // interface DependencyAlias

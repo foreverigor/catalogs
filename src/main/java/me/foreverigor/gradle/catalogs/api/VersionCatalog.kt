@@ -13,20 +13,19 @@ interface VersionCatalog {
     val prefix: String
 
     val realCatalog: VersionCatalogBuilder
+
     fun catalog(catalogPrefix: String): CatalogGroupProvider
 
     fun catalog(catalogPrefix: String, catalogConsumer: VersionCatalog.() -> Unit)
 
     fun group(catalogPrefix: String, catalogConsumer: Group.() -> Unit)
 
+    @Deprecated("should not be used")
     fun library(nestedAlias: String, groupArtifactVersion: String): LibraryAlias
 
     fun library(nestedAlias: String, group: String, artifact: String, version: String = withoutVersion): LibraryAlias
 
     fun library(nestedAlias: String, group: String, artifact: String, version: VersionRef): LibraryAlias
-
-    @Deprecated("")
-    fun plugin(nestedAlias: String, id: String): VersionCatalogBuilder.PluginAliasBuilder
 
     fun plugin(nestedAlias: String, id: String, version: String): PluginAlias
 
