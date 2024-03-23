@@ -1,4 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("java")
     // kotlin("jvm") version "1.9.23"
@@ -16,6 +15,7 @@ repositories {
 }
 
 dependencies {
+    implementation(deps.bundles.logging.slf4j.slf4jLogback)
     implementation(org.springframework.boot.web)
     implementation(org.springframework.boot.webflux)
 

@@ -39,13 +39,19 @@ object Catalogs : CatalogsSupport() {
     } // aliases
 
     val categories = catalogs("categories") {
-        catalog("logging") {
+        catalog("deps.logging") {
             catalog("slf4j") {
                 bundle("slf4jSimple", slf4jApi, slf4jImplSimple)
                 bundle("slf4jLogback", slf4jApi, logbackClassic)
+                bundle("slf4jLog4j", slf4jApi, slf4jLog4jImpl)
             }
 
-            catalog("log4") {
+            catalog("jcl") {
+                bundle("log4j", commonsLogging, log4jCore)
+            }
+
+            catalog("log4j") {
+                bundle("log4j", log4jApi, log4jCore)
             }
 
             catalog("rainbowgum") { // New kid on the block
@@ -83,6 +89,8 @@ object Catalogs : CatalogsSupport() {
                 module("log4j", "log4j-over-slf4j", Versions::Slf4j)
                 module("jdk14", "slf4j-jdk14", Versions::Slf4j)
                 module("nop", "slf4j-nop", Versions::Slf4j)
+                module("reload4j", "slf4j-reload4j", Versions::Slf4j)
+                module("jcl", "jcl-over-slf4j", Versions::Slf4j)
 
             }
 
@@ -144,9 +152,10 @@ object Catalogs : CatalogsSupport() {
             library("commons.io", "$prefix.commons-io", "commons-io", Versions::ApacheCommonsIo)
 
             group("logging.log4j") {
-                module("core", "log4j-core", Versions::Log4j)
-                module("api", "log4j-api", Versions::Log4j)
-                module("slf4jImpl", "log4j-slf4j2-impl", Versions::Log4j)
+                log4jCore = module("core", "log4j-core", Versions::Log4j)
+                log4jApi = module("api", "log4j-api", Versions::Log4j)
+                slf4jLog4jImpl = module("slf4jImpl", "log4j-slf4j-impl", Versions::Log4j)
+                module("slf4j2Impl", "log4j-slf4j2-impl", Versions::Log4j)
             }
             group("httpcomponents") {
                 module("httpClient", "httpclient", Versions::ApacheHttp)
@@ -162,6 +171,14 @@ object Catalogs : CatalogsSupport() {
                 }
             }
         } // catalog("org.apache")
+        catalog("commons") {
+            catalog("logging") {
+                commonsLogging = library("commonsLogging", "commons-logging", "commons-logging", Versions::ApacheCommons)
+            }
+        }
+        catalog("log4j") { // Log4j 1
+            library("log4j", "log4j", "log4j")
+        }
         catalog("org.gradle") {
             gradleToolchains = plugin("toolchains", "org.gradle.toolchains.foojay-resolver-convention", Versions::ToolchainsPlugin)
         }
@@ -321,7 +338,11 @@ object Catalogs : CatalogsSupport() {
     // Shared between catalogs (links):
     var slf4jApi by libs
     var slf4jImplSimple by libs
+    var slf4jLog4jImpl by libs
     var logbackClassic by libs
+    var commonsLogging by libs
+    var log4jApi by libs
+    var log4jCore by libs
 
     private var kotlinJvmPlugin by plugins
     private var kotlinStdlib by libs

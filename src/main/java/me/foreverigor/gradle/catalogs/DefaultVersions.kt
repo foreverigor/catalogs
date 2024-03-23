@@ -11,6 +11,7 @@ open class DefaultVersions(
         open var ApacheCommonsIo: String = latestRelease,
         open var ApacheHttp: String = latestRelease,
         open var ApacheHttp5: String = latestRelease,
+        open var CommonsLogging: String = withoutVersion,
 
         open var Log4j: String = latestRelease,
         open var Slf4j: String = "1.7.36",
