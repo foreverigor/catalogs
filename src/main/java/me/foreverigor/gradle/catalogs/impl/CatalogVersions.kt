@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty1
 
 object CatalogVersions : DefaultVersions() {
 
-    private var versionValues: DefaultVersions = CatalogVersions
+    var versionValues: DefaultVersions = CatalogVersions
     private val versionRegistrations = mutableMapOf<VersionRef, MutableSet<String>>()
 
     /**

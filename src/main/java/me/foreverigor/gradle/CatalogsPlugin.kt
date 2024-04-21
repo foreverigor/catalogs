@@ -4,6 +4,7 @@ package me.foreverigor.gradle
 
 import me.foreverigor.gradle.catalogs.Catalogs
 import me.foreverigor.gradle.catalogs.CatalogsPluginExtension
+import me.foreverigor.gradle.catalogs.impl.CatalogVersions
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.api.internal.catalog.DefaultVersionCatalogBuilder
@@ -26,8 +27,11 @@ class CatalogsPlugin : Plugin<PluginAware> {
     private fun apply(settings: Settings) {
         settings.extensions.create(CatalogsPluginExtension.NAME, CatalogsPluginExtension.TYPE)
         settings.gradle.settingsEvaluated {
-            val versions = settings.extensions.getByType(CatalogsPluginExtension.TYPE).versions
-            Logger.info("will use {} for versions", versions::class.qualifiedName)
+            @Suppress("UNNECESSARY_SAFE_CALL") // Not true!
+            settings.extensions.getByType(CatalogsPluginExtension.TYPE).versions?.let {
+                Logger.info("will use {} for versions", it::class.qualifiedName)
+                CatalogVersions.versionValues = it
+            }
             Catalogs.init(settings.dependencyResolutionManagement)
         }
     }
