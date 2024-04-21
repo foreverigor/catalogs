@@ -221,9 +221,9 @@ object Catalogs : CatalogsSupport() {
         }*/
         catalog("org.junit") {
             junitJupiter = library("jupiter", "$prefix.jupiter", "junit-jupiter", Versions::JunitJupiter)
-            library("jupiter", "$prefix.jupiter", "junit-jupiter-api", Versions::JunitJupiter)
-            library("jupiterApi", "$prefix.jupiter", "junit-jupiter-engine", Versions::JunitJupiter)
-            junit5Bom = library("junit5", prefix, "junit-bom", Versions::JunitBom)
+            library("jupiterApi", "$prefix.jupiter", "junit-jupiter-api", Versions::JunitJupiter)
+            library("jupiterEngine", "$prefix.jupiter", "junit-jupiter-engine", Versions::JunitJupiter)
+            junit5Bom = library("junit5Bom", prefix, "junit-bom", Versions::JunitBom)
         }
         catalog("org.assertj") {
             module("assertjCore", "assertj-core", Versions::AssertJ)
