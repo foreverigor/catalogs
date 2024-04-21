@@ -80,6 +80,12 @@ public class PrefixVersionCatalog implements VersionCatalog {
         return log(nestedAlias, alias);
     }
 
+    @NotNull
+    @Override
+    public LibraryAlias module(@NotNull String nestedAlias, @NotNull String artifact, @NotNull KProperty1<DefaultVersions, String> version) {
+        return library(nestedAlias, getPrefix(), artifact, version);
+    }
+
     @Override
     @Deprecated
     public @NotNull LibraryAlias library(@NotNull String nestedAlias, @NotNull String groupArtifactVersion) {

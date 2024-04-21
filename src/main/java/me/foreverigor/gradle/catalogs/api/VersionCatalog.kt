@@ -27,6 +27,16 @@ interface VersionCatalog {
 
     fun library(nestedAlias: String, group: String, artifact: String, version: VersionRef): LibraryAlias
 
+    /**
+     * shortcut form of [library] where group == prefix
+     *
+     * this part of the DSL is shamelessly stolen from the
+     * [refreshVersions](https://github.com/Splitties/refreshVersions/tree/main/plugins/dependencies/src/main/kotlin/dependencies)
+     * plugin (see also [Use built-in dependency notations](https://splitties.github.io/refreshVersions/add-dependencies/#use-built-in-dependency-notations))
+     */
+    fun module(nestedAlias: String, artifact: String, version: VersionRef): LibraryAlias
+
+
     fun plugin(nestedAlias: String, id: String, version: String): PluginAlias
 
     fun plugin(nestedAlias: String, id: String, version: VersionRef): PluginAlias
@@ -41,6 +51,9 @@ interface VersionCatalog {
 
     fun bundle(nestedAlias: String, vararg aliases: LibraryAlias)
 
+    /**
+     * TODO not required anymore
+     */
     interface Group : VersionCatalog {
 
         /**
@@ -50,7 +63,7 @@ interface VersionCatalog {
          * [refreshVersions](https://github.com/Splitties/refreshVersions/tree/main/plugins/dependencies/src/main/kotlin/dependencies)
          * plugin (see also [Use built-in dependency notations](https://splitties.github.io/refreshVersions/add-dependencies/#use-built-in-dependency-notations))
          */
-        fun module(alias: String, name: String, version: VersionRef): LibraryAlias
+        // fun module(alias: String, name: String, version: VersionRef): LibraryAlias
 
         fun module(alias: String, name: String, version: String = withoutVersion): LibraryAlias
     }

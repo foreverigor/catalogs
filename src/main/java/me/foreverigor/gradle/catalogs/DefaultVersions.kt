@@ -35,8 +35,18 @@ open class DefaultVersions(
         open var JunitBom: String = latestRelease,
         open var AssertJ: String = latestRelease,
 
+        open var JakartaXml: String = withoutVersion,
+        open var JakartaAnnotation: String = withoutVersion,
+        open var JakartaServlet: String = withoutVersion,
         open var JakartaInject: String = withoutVersion,
         open var JakartaValidation: String = withoutVersion,
+        open var JakartaJaxRs: String = withoutVersion,
+        open var JakartaPersistence: String = withoutVersion,
+
+        open var JakartaJsonP: String = withoutVersion,
+        open var JakartaJsonB: String = withoutVersion,
+        open var JakartaPlatform: String = withoutVersion,
+
 
         open var Spring: String = latestRelease,
         open var SpringBoot: String = withoutVersion,
@@ -69,7 +79,7 @@ open class DefaultVersions(
 
         open var Vavr: String = latestRelease,
         open var NoException: String = latestRelease,
-        open var Json: String = latestRelease,
+        open var orgJson: String = latestRelease,
         open var Jsoup: String = latestRelease,
 
         open var Asm: String = latestRelease,

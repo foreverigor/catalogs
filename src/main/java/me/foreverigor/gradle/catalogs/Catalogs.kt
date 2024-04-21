@@ -95,7 +95,7 @@ object Catalogs : CatalogsSupport() {
             }
 
             catalog("jetbrains") {
-                library("annotations", prefix, "annotations", Versions::JBAnnotations)
+                module("annotations", "annotations", Versions::JBAnnotations)
             }
 
             catalog("jetbrains.kotlin").group {
@@ -146,8 +146,8 @@ object Catalogs : CatalogsSupport() {
         } // catalog("org")
         catalog("org.apache") {
             group("commons") {
-                library("lang3", prefix, "commons-lang3", Versions::ApacheCommons)
-                library("collections4", prefix, "commons-collections4", Versions::ApacheCommons)
+                module("lang3", "commons-lang3", Versions::ApacheCommons)
+                module("collections4", "commons-collections4", Versions::ApacheCommons)
             }
             library("commons.io", "$prefix.commons-io", "commons-io", Versions::ApacheCommonsIo)
 
@@ -211,10 +211,10 @@ object Catalogs : CatalogsSupport() {
             }
         }
         catalog("org.reflections") {
-            library("reflections", prefix, "reflections", Versions::Reflections)
+            module("reflections", "reflections", Versions::Reflections)
         }
         catalog("org.objenesis") {
-            library("objenesis", prefix, "objenesis", Versions::Objenesis)
+            module("objenesis","objenesis", Versions::Objenesis)
         }
         /*catalog("junit") {
             library("junit", prefix, "junit", Versions::Junit)
@@ -226,13 +226,13 @@ object Catalogs : CatalogsSupport() {
             junit5Bom = library("junit5", prefix, "junit-bom", Versions::JunitBom)
         }
         catalog("org.assertj") {
-            library("assertjCore", prefix, "assertj-core", Versions::AssertJ)
+            module("assertjCore", "assertj-core", Versions::AssertJ)
         }
         catalog("org.json") {
-            library("json", prefix, "json", Versions::Json)
+            module("json", "json", Versions::orgJson)
         }
         catalog("org.jsoup") {
-            library("jsoup", prefix, "jsoup", Versions::Jsoup)
+            module("jsoup", "jsoup", Versions::Jsoup)
         }
         catalog("org.kordamp") {
             group("gradle") {
@@ -265,23 +265,23 @@ object Catalogs : CatalogsSupport() {
             }
         }
         catalog("org.javassist") {
-            library("javassist", prefix, "javassist", Versions::Javassist)
+            module("javassist", "javassist", Versions::Javassist)
         }
         catalog("org.ow2.asm") {
-            library("asm", prefix, "asm", Versions::Asm)
+            module("asm", "asm", Versions::Asm)
         }
         catalog("cglib") {
-            library("nodep", prefix, "cglib-nodep", Versions::Cglib)
-            library("cglib", prefix, "cglib", Versions::Cglib)
+            module("nodep","cglib-nodep", Versions::Cglib)
+            module("cglib","cglib", Versions::Cglib)
         }
         catalog("net.bytebuddy") {
-            library("byteBuddy", prefix, "byte-buddy", Versions::ByteBuddy)
-            library("byteBuddyAgent", prefix, "byte-buddy-agent", Versions::ByteBuddy)
-            library("byteBuddyDep", prefix, "byte-buddy-dep", Versions::ByteBuddy)
+            module("byteBuddy", "byte-buddy", Versions::ByteBuddy)
+            module("byteBuddyAgent", "byte-buddy-agent", Versions::ByteBuddy)
+            module("byteBuddyDep", "byte-buddy-dep", Versions::ByteBuddy)
         }
 
         catalog("io.vavr") {
-            library("vavr", prefix, "vavr", Versions::Vavr)
+            module("vavr", "vavr", Versions::Vavr)
         }
 
         catalog("io") {
@@ -308,7 +308,7 @@ object Catalogs : CatalogsSupport() {
                 module("all", "netty-all", Versions::Netty)
             }
             catalog("projectreactor") {
-                library("test", prefix, "reactor-test", Versions::ReactorTest)
+                module("test", "reactor-test", Versions::ReactorTest)
             }
             catalog("restassured") { // rest-assured would've been split apart
                 library("restAssured", "io.rest-assured", "rest-assured", Versions::RestAssured)
@@ -326,8 +326,27 @@ object Catalogs : CatalogsSupport() {
         }
 
         catalog("jakarta") {
-            library("injectApi", "jakarta.inject", "jakarta.inject-api", Versions::JakartaInject)
+            library("xmlBindApi", "jakarta.xml.bind", "jakarta.xml.bind-api", Versions::JakartaXml)
+            library("xmlWsApi", "jakarta.xml.ws", "jakarta.xml.ws-api", Versions::JakartaXml)
+
+            library("annotationApi", "jakarta.annotation", "jakarta.annotation-api", Versions::JakartaAnnotation)
+            library("servletApi", "jakarta.servlet", "jakarta.servlet-api", Versions::JakartaServlet)
+
             library("validationApi", "jakarta.validation", "jakarta.validation-api", Versions::JakartaValidation)
+            library("jaxRsApi", "jakarta.ws.rs", "jakarta.ws.rs-api", Versions::JakartaJaxRs)
+            library("injectApi", "jakarta.inject", "jakarta.inject-api", Versions::JakartaInject)
+            library("persistenceApi", "jakarta.persistence", "jakarta.persistence-api", Versions::JakartaPersistence)
+
+            group("json") {
+                module("jsonpApi", "jakarta.json-api", Versions::JakartaJsonP)
+                library("jsonbApi", "$prefix.bind", "jakarta.json.bind-api", Versions::JakartaJsonB)
+            }
+
+            group("platform") {
+                module("platformApi", "jakarta.jakartaee-api", Versions::JakartaPlatform)
+                module("platformApiBom", "jakarta.jakartaee-bom", Versions::JakartaPlatform)
+
+            }
         }
 
         catalog("javax") {
