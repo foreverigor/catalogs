@@ -14,7 +14,7 @@ open class AliasLinks<T> {
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         if (properties.containsKey(property.name)) {
-            CatalogsPlugin.Logger.warn("attempted duplicate assignment of alias link '{}' was ignored", property.name)
+            CatalogsPlugin.Logger.info("attempted duplicate assignment of alias link '{}' was ignored", property.name)
         } else {
             properties[property.name] = value
         }
