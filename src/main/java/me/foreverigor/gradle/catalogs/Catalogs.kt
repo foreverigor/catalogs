@@ -216,10 +216,10 @@ object Catalogs : CatalogsSupport() {
         catalog("org.objenesis") {
             module("objenesis","objenesis", Versions::Objenesis)
         }
-        /*catalog("junit") {
-            library("junit", prefix, "junit", Versions::Junit)
-        }*/
         catalog("org.junit") {
+            library("junit4", "junit","junit", Versions::Junit)
+            library("junit", "junit","junit", Versions::Junit)
+
             junitJupiter = library("jupiter", "$prefix.jupiter", "junit-jupiter", Versions::JunitJupiter)
             library("jupiterApi", "$prefix.jupiter", "junit-jupiter-api", Versions::JunitJupiter)
             library("jupiterEngine", "$prefix.jupiter", "junit-jupiter-engine", Versions::JunitJupiter)
@@ -233,6 +233,12 @@ object Catalogs : CatalogsSupport() {
         }
         catalog("org.jsoup") {
             module("jsoup", "jsoup", Versions::Jsoup)
+        }
+        catalog ("org.jooq") {
+            module("jooq", "jooq", Versions::JOOQ)
+            module("joor", "joor", Versions::JOOR)
+            module("jool", "jool", Versions::JOOL)
+            module("joox", "joox", Versions::JOOX)
         }
         catalog("org.kordamp") {
             group("gradle") {

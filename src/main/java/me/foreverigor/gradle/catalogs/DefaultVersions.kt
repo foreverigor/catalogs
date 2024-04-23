@@ -82,6 +82,11 @@ open class DefaultVersions(
         open var orgJson: String = latestRelease,
         open var Jsoup: String = latestRelease,
 
+        open var JOOQ: String = latestRelease,
+        open var JOOR: String = latestRelease,
+        open var JOOL: String = latestRelease,
+        open var JOOX: String = latestRelease,
+
         open var Asm: String = latestRelease,
         open var Cglib: String = latestRelease,
         open var ByteBuddy: String = latestRelease,
