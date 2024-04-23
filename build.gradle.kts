@@ -13,6 +13,11 @@ repositories {
     mavenCentral()
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
 gradlePlugin {
     plugins.register("catalogue-plugin") {
         id = "me.foreverigor.gradle.catalogue"
@@ -28,7 +33,6 @@ catalog {
         version("kotlin", "1.0.0")
         // add dependencies and aliases here
         library("alias", "group", "artifact").version("version")
-//        alias("<alias name>").to("<group-id>", "<artifact-id>").version("<version code>")
     }
 }
 

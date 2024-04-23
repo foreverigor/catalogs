@@ -14,9 +14,9 @@ public abstract class AbstractAliasLink implements DependencyAlias {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof AbstractAliasLink that)) return false;
+    if (!(o instanceof AbstractAliasLink)) return false;
 
-    return getDependencyString().equals(that.getDependencyString());
+    return getDependencyString().equals(((AbstractAliasLink) o).getDependencyString());
   }
 
   @Override
