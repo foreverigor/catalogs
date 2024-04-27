@@ -33,8 +33,11 @@ object Catalogs : CatalogsSupport() {
     }
 
     catalog("junit") {
+      library("junit", junit4)
+      library("junit4", junit4)
       library("jupiter", junitJupiter)
-      library("bom", junit5Bom)
+      library("jupiterEngine", jupiterEngine)
+      library("jupiterBom", junit5Bom)
     }
   } // aliases
 
@@ -235,11 +238,11 @@ object Catalogs : CatalogsSupport() {
     }
     catalog("org.junit") {
       library("junit4", "junit", "junit", Versions::Junit)
-      library("junit", "junit", "junit", Versions::Junit)
+      junit4 = library("junit", "junit", "junit", Versions::Junit)
 
       junitJupiter = library("jupiter", "$prefix.jupiter", "junit-jupiter", Versions::JunitJupiter)
       library("jupiterApi", "$prefix.jupiter", "junit-jupiter-api", Versions::JunitJupiter)
-      library("jupiterEngine", "$prefix.jupiter", "junit-jupiter-engine", Versions::JunitJupiter)
+      jupiterEngine = library("jupiterEngine", "$prefix.jupiter", "junit-jupiter-engine", Versions::JunitJupiter)
       junit5Bom = library("junit5Bom", prefix, "junit-bom", Versions::JunitBom)
     }
     catalog("org.assertj") {
@@ -402,7 +405,9 @@ object Catalogs : CatalogsSupport() {
   private var springBootTest by libs
   private var springBootActuator by libs
 
+  private var junit4 by libs
   private var junitJupiter by libs
+  private var jupiterEngine by libs
   private var junit5Bom by libs
 
   object Plugins : EarlyInitSupport() {
