@@ -67,6 +67,8 @@ object Catalogs : CatalogsSupport() {
           library("gson", "$prefix.gson", "gson", Versions::Gson)
           library("findbugs.jsr305", "$prefix.findbugs", "jsr305")
         }
+
+        plugin("jib", "com.google.cloud.tools.jib", Versions::JibPlugin)
       }
       group("machinezoo.noexception") {
         module("noException", "noexception", Versions::NoException)
@@ -87,6 +89,12 @@ object Catalogs : CatalogsSupport() {
       group("sparkjava") {
         module("sparkCore", "spark-core", Versions::Spark)
       }
+
+      plugin("shadowJar", "com.github.johnrengelman.shadow", Versions::ShadowJarPlugin)
+
+      group("github") {
+        library("bsideup.jabel", "com.github.bsideup.jabel", "jabel-javac-plugin", Versions::Jabel)
+      }
     } // catalog("com")
 
     catalog("org") {
@@ -99,7 +107,6 @@ object Catalogs : CatalogsSupport() {
         module("nop", "slf4j-nop", Versions::Slf4j)
         module("reload4j", "slf4j-reload4j", Versions::Slf4j)
         module("jcl", "jcl-over-slf4j", Versions::Slf4j)
-
       }
 
       catalog("jetbrains") {
@@ -208,7 +215,9 @@ object Catalogs : CatalogsSupport() {
       }
       group("python") {
         module("pythonLanguage", "python-language", Versions::GraalVM)
-        module("pythonLauncher", "'python-launcher", Versions::GraalVM)
+        module("pythonLauncher", "python-launcher", Versions::GraalVM)
+        module("pythonResources", "python-resources", Versions::GraalVM)
+        module("pythonEmbedding", "python-embedding", Versions::GraalVM)
       }
     } // catalog("org.graalvm")
     catalog("org.eclipse") {

@@ -82,6 +82,7 @@ open class DefaultVersions(
   open var NoException: String = latestRelease,
   open var orgJson: String = latestRelease,
   open var Jsoup: String = latestRelease,
+  open var Jabel: String = latestRelease,
 
   open var JOOQ: String = latestRelease,
   open var JOOR: String = latestRelease,
@@ -94,6 +95,8 @@ open class DefaultVersions(
   open var Javassist: String = latestRelease,
 
   open var ToolchainsPlugin: String = latestRelease,
+  open var ShadowJarPlugin: String = latestRelease,
+  open var JibPlugin: String = latestRelease,
   open var KordampPlugins: String = latestRelease
 ) {
   companion object {
