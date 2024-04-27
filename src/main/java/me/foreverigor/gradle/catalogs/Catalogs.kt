@@ -201,6 +201,11 @@ object Catalogs : CatalogsSupport() {
       gradleToolchains = plugin("toolchains", "org.gradle.toolchains.foojay-resolver-convention", Versions::ToolchainsPlugin)
     }
     catalog("org.graalvm") {
+      /**
+       * "org.plugins.graalvm.nativeBuildtools"
+       */
+      plugin("nativeBuildtools", "org.graalvm.buildtools.native", Versions::GraalVmPlugin)
+
       group("sdk") {
         module("graalSdk", "graal-sdk", Versions::GraalVM)
         module("nativeImage", "nativeimage", Versions::GraalVM)

@@ -73,6 +73,7 @@ open class DefaultVersions(
   open var Helidon: String = withoutVersion,
 
   open var GraalVM: String = latestRelease,
+  open var GraalVmPlugin: String = latestRelease,
 
   open var ReactorTest: String = withoutVersion,
   open var RestAssured: String = withoutVersion,
