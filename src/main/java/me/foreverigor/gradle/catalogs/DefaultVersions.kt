@@ -13,6 +13,8 @@ open class DefaultVersions(
   open var ApacheHttp: String = latestRelease,
   open var ApacheHttp5: String = latestRelease,
   open var CommonsLogging: String = withoutVersion,
+  open var CommonsCli: String = withoutVersion,
+  open var CommonsBeanUtils: String = withoutVersion,
 
   open var Log4j: String = latestRelease,
   open var Slf4j: String = "1.7.36",
@@ -36,6 +38,8 @@ open class DefaultVersions(
   open var JunitBom: String = latestRelease,
   open var AssertJ: String = latestRelease,
 
+  open var Jna: String = withoutVersion,
+
   open var JakartaXml: String = withoutVersion,
   open var JakartaAnnotation: String = withoutVersion,
   open var JakartaServlet: String = withoutVersion,
@@ -47,7 +51,6 @@ open class DefaultVersions(
   open var JakartaJsonP: String = withoutVersion,
   open var JakartaJsonB: String = withoutVersion,
   open var JakartaPlatform: String = withoutVersion,
-
 
   open var Spring: String = latestRelease,
   open var SpringBoot: String = withoutVersion,
@@ -85,10 +88,18 @@ open class DefaultVersions(
   open var Jsoup: String = latestRelease,
   open var Jabel: String = latestRelease,
 
+  open var JCommander: String = latestRelease,
+
   open var JOOQ: String = latestRelease,
   open var JOOR: String = latestRelease,
   open var JOOL: String = latestRelease,
   open var JOOX: String = latestRelease,
+
+  open var Picocli: String = latestRelease,
+  open var ZtExec: String = latestRelease,
+  open var Jline: String = latestRelease,
+  open var JSch: String = latestRelease,
+  open var SshJ: String = latestRelease,
 
   open var Asm: String = latestRelease,
   open var Cglib: String = latestRelease,

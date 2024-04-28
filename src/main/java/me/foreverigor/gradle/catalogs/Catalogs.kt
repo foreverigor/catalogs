@@ -36,6 +36,7 @@ object Catalogs : CatalogsSupport() {
       library("junit", junit4)
       library("junit4", junit4)
       library("jupiter", junitJupiter)
+      library("jupiterApi", jupiterApi)
       library("jupiterEngine", jupiterEngine)
       library("jupiterBom", junit5Bom)
     }
@@ -97,7 +98,11 @@ object Catalogs : CatalogsSupport() {
 
       group("github") {
         library("bsideup.jabel", "com.github.bsideup.jabel", "jabel-javac-plugin", Versions::Jabel)
+        library("mwiede.jsch", "com.github.mwiede", "jsch", Versions::JSch)
       }
+      library("beust.jcommander", "com.beust", "jcommander", Versions::JCommander)
+
+      library("hierynomus.sshj", "com.hierynomus", "sshj", Versions::SshJ)
     } // catalog("com")
 
     catalog("org") {
@@ -194,6 +199,12 @@ object Catalogs : CatalogsSupport() {
         commonsLogging = library("commonsLogging", "commons-logging", "commons-logging", Versions::ApacheCommons)
       }
     }
+    catalog("commons-cli") {
+      module("commonsCli", "commons-cli", Versions::CommonsCli)
+    }
+    catalog("commons-beanutils:commons-beanutils:1.9.4") {
+      module("commonsBeanUtils", "commons-beanutils", Versions::CommonsBeanUtils)
+    }
     catalog("log4j") { // Log4j 1
       library("log4j", "log4j", "log4j")
     }
@@ -246,7 +257,7 @@ object Catalogs : CatalogsSupport() {
       junit4 = library("junit", "junit", "junit", Versions::Junit)
 
       junitJupiter = library("jupiter", "$prefix.jupiter", "junit-jupiter", Versions::JunitJupiter)
-      library("jupiterApi", "$prefix.jupiter", "junit-jupiter-api", Versions::JunitJupiter)
+      jupiterApi = library("jupiterApi", "$prefix.jupiter", "junit-jupiter-api", Versions::JunitJupiter)
       jupiterEngine = library("jupiterEngine", "$prefix.jupiter", "junit-jupiter-engine", Versions::JunitJupiter)
       junit5Bom = library("junit5Bom", prefix, "junit-bom", Versions::JunitBom)
     }
@@ -264,6 +275,12 @@ object Catalogs : CatalogsSupport() {
       module("joor", "joor", Versions::JOOR)
       module("jool", "jool", Versions::JOOL)
       module("joox", "joox", Versions::JOOX)
+    }
+    catalog("org.zeroturnaround") {
+      module("ztExec", "zt-exec", Versions::ZtExec)
+    }
+    catalog("org.jline") {
+      module("jline", "jline", Versions::Jline)
     }
     catalog("org.kordamp") {
       group("gradle") {
@@ -292,7 +309,6 @@ object Catalogs : CatalogsSupport() {
         plugin("spotbugs", "$prefix.spotbugs", Versions::KordampPlugins)
         plugin("testing", "$prefix.testing", Versions::KordampPlugins)
         kordampSettings = plugin("settings", "$prefix.settings", Versions::KordampPlugins)
-
       }
     }
     catalog("org.javassist") {
@@ -304,6 +320,11 @@ object Catalogs : CatalogsSupport() {
     catalog("cglib") {
       module("nodep", "cglib-nodep", Versions::Cglib)
       module("cglib", "cglib", Versions::Cglib)
+    }
+    catalog("net") {
+      catalog("java.dev") {
+        library("jna", "net.java.dev.jna", "jna", Versions::Jna)
+      }
     }
     catalog("net.bytebuddy") {
       module("byteBuddy", "byte-buddy", Versions::ByteBuddy)
@@ -348,6 +369,10 @@ object Catalogs : CatalogsSupport() {
         library("rxjava3", "io.reactivex.rxjava3", "rxjava")
       }
     } // catalog("io")
+
+    catalog("info.picocli") {
+      module("picocli", "picocli", Versions::Picocli)
+    }
 
     catalog("ch.qos") {
       group("logback") {
@@ -412,6 +437,7 @@ object Catalogs : CatalogsSupport() {
 
   private var junit4 by libs
   private var junitJupiter by libs
+  private var jupiterApi by libs
   private var jupiterEngine by libs
   private var junit5Bom by libs
 
