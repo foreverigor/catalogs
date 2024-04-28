@@ -198,9 +198,9 @@ object Catalogs : CatalogsSupport() {
       catalog("logging") {
         commonsLogging = library("commonsLogging", "commons-logging", "commons-logging", Versions::ApacheCommons)
       }
-    }
-    catalog("commons-cli") {
-      module("commonsCli", "commons-cli", Versions::CommonsCli)
+      catalog("cli") {
+        library("commonsCli", "commons-cli","commons-cli", Versions::CommonsCli)
+      }
     }
     catalog("commons-beanutils:commons-beanutils:1.9.4") {
       module("commonsBeanUtils", "commons-beanutils", Versions::CommonsBeanUtils)
