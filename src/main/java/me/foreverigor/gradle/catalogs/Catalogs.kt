@@ -26,7 +26,7 @@ object Catalogs : CatalogsSupport() {
       }
     } // catalog("spring")
 
-    catalog("kotlin") { // FIXME hides the kotlin extension, rethink
+    catalog("kotlinLibs") { // FIXME hides the kotlin extension, rethink
       plugin("jvm", kotlinJvmPlugin)
       library("stdlib", kotlinStdlib)
       library("reflect", kotlinReflect)
@@ -201,9 +201,9 @@ object Catalogs : CatalogsSupport() {
       catalog("cli") {
         library("commonsCli", "commons-cli","commons-cli", Versions::CommonsCli)
       }
-    }
-    catalog("commons-beanutils:commons-beanutils:1.9.4") {
-      module("commonsBeanUtils", "commons-beanutils", Versions::CommonsBeanUtils)
+      catalog("beanutils") {
+        library("commonsBeanUtils", "commons-beanutils" ,"commons-beanutils", Versions::CommonsBeanUtils)
+      }
     }
     catalog("log4j") { // Log4j 1
       library("log4j", "log4j", "log4j")
