@@ -24,6 +24,7 @@ open class DefaultVersions(
   open var KotlinX: String = latestRelease, // Doesn't follow Kotlin versioning
   open var Guava: String = latestRelease,
   open var Gson: String = latestRelease,
+  open var AutoService: String = latestRelease,
   open var Jackson: String = latestRelease,
   open var Reflections: String = withoutVersion,
   open var Objenesis: String = withoutVersion,

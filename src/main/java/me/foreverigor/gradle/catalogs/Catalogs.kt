@@ -71,6 +71,7 @@ object Catalogs : CatalogsSupport() {
           library("gson", "$prefix.gson", "gson", Versions::Gson)
           library("findbugs.jsr305", "$prefix.findbugs", "jsr305")
         }
+        library("autoService", "com.google.auto.service", "auto-service", Versions::AutoService)
 
         plugin("jib", "com.google.cloud.tools.jib", Versions::JibPlugin)
       }
