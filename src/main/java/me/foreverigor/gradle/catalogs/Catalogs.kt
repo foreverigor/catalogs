@@ -377,7 +377,7 @@ object Catalogs : CatalogsSupport() {
       }
 
       catalog("smallrye") {
-        module("config", "smallrye-config", Versions::SmallryeConfig)
+        library("config", "$prefix.config", "smallrye-config", Versions::SmallryeConfig)
         catalog("config") {
           module("sourceHocon", "smallrye-config-source-hocon", Versions::SmallryeConfig)
           module("sourceYaml", "smallrye-config-source-yaml", Versions::SmallryeConfig)
