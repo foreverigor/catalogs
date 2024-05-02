@@ -101,6 +101,8 @@ object Catalogs : CatalogsSupport() {
 
       plugin("shadowJar", "com.github.johnrengelman.shadow", Versions::ShadowJarPlugin)
 
+      library("typesafe.config", "com.typesafe", "config", Versions::LightbendConfig)
+
       group("github") {
         library("bsideup.jabel", "com.github.bsideup.jabel", "jabel-javac-plugin", Versions::Jabel)
         library("mwiede.jsch", "com.github.mwiede", "jsch", Versions::JSch)
@@ -372,6 +374,15 @@ object Catalogs : CatalogsSupport() {
       }
       catalog("reactivex") {
         library("rxjava3", "io.reactivex.rxjava3", "rxjava")
+      }
+
+      catalog("smallrye") {
+        module("config", "smallrye-config", Versions::SmallryeConfig)
+        catalog("config") {
+          module("sourceHocon", "smallrye-config-source-hocon", Versions::SmallryeConfig)
+          module("sourceYaml", "smallrye-config-source-yaml", Versions::SmallryeConfig)
+          module("sourceFileSystem", "smallrye-config-source-file-system", Versions::SmallryeConfig)
+        }
       }
     } // catalog("io")
 

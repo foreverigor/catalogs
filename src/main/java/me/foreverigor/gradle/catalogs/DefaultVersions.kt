@@ -102,6 +102,9 @@ open class DefaultVersions(
   open var JSch: String = latestRelease,
   open var SshJ: String = latestRelease,
 
+  open var SmallryeConfig: String = latestRelease,
+  open var LightbendConfig: String = latestRelease,
+
   open var Asm: String = latestRelease,
   open var Cglib: String = latestRelease,
   open var ByteBuddy: String = latestRelease,
