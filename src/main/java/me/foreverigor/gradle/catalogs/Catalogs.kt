@@ -58,7 +58,8 @@ object Catalogs : CatalogsSupport() {
         bundle("log4j", log4jApi, log4jCore)
       }
 
-      catalog("rainbowgum") { // New kid on the block
+      catalog("rainbowgum") {
+        library("rainbowGum", rainbowGum)
       }
     }
   } // categories
@@ -93,7 +94,6 @@ object Catalogs : CatalogsSupport() {
           module("jdk8", "jackson-datatype-jdk8", Versions::Jackson)
         }
         library("parameterNames", "$prefix.module", "jackson-module-parameter-names", Versions::Jackson)
-
       }
       group("sparkjava") {
         module("sparkCore", "spark-core", Versions::Spark)
@@ -106,14 +106,18 @@ object Catalogs : CatalogsSupport() {
       group("github") {
         library("bsideup.jabel", "com.github.bsideup.jabel", "jabel-javac-plugin", Versions::Jabel)
         library("mwiede.jsch", "com.github.mwiede", "jsch", Versions::JSch)
+        library("airline", "com.github.rvesse", "airline", Versions::Airline)
+        library("airline3", "com.github.rvesse", "airline", Versions::Airline)
       }
       library("beust.jcommander", "com.beust", "jcommander", Versions::JCommander)
 
       library("hierynomus.sshj", "com.hierynomus", "sshj", Versions::SshJ)
+
+      library("diffplug.durian", "com.diffplug.durian", "durian", Versions::Durian)
     } // catalog("com")
 
     catalog("org") {
-      catalog("slf4j").group {
+      catalog("slf4j") {
         slf4jApi = module("api", "slf4j-api", Versions::Slf4j)
         slf4jImplSimple = module("simple", "slf4j-simple", Versions::Slf4j)
         module("jul", "jul-to-slf4j", Versions::Slf4j)
@@ -122,13 +126,14 @@ object Catalogs : CatalogsSupport() {
         module("nop", "slf4j-nop", Versions::Slf4j)
         module("reload4j", "slf4j-reload4j", Versions::Slf4j)
         module("jcl", "jcl-over-slf4j", Versions::Slf4j)
+        module("jdkPlatformLogging", "slf4j-jdk-platform-logging", Versions::Slf4j)
       }
 
       catalog("jetbrains") {
         module("annotations", "annotations", Versions::JBAnnotations)
       }
 
-      catalog("jetbrains.kotlin").group {
+      catalog("jetbrains.kotlin") {
         kotlinStdlib = module("stdlib", "kotlin-stdlib", Versions::Kotlin)
         module("stdlib7", "kotlin-stdlib7", Versions::Kotlin)
         module("stdlib8", "kotlin-stdlib8", Versions::Kotlin)
@@ -252,7 +257,7 @@ object Catalogs : CatalogsSupport() {
         module("servlet", "jetty-servlet", Versions::Jetty)
         module("client", "jetty-client", Versions::Jetty)
       }
-    }
+    } // catalog("org.eclipse")
     catalog("org.reflections") {
       module("reflections", "reflections", Versions::Reflections)
     }
@@ -321,6 +326,9 @@ object Catalogs : CatalogsSupport() {
     catalog("org.javassist") {
       module("javassist", "javassist", Versions::Javassist)
     }
+    catalog("org.perfectable") {
+      module("introspectable", "introspectable", Versions::Introspectable)
+    }
     catalog("org.ow2.asm") {
       module("asm", "asm", Versions::Asm)
     }
@@ -384,6 +392,12 @@ object Catalogs : CatalogsSupport() {
           module("sourceFileSystem", "smallrye-config-source-file-system", Versions::SmallryeConfig)
         }
       }
+      catalog("jstach.rainbowgum") {
+        rainbowGum = module("rainbowgum", "rainbowgum", Versions::Rainbowgum)
+        module("core", "rainbowgum-core", Versions::Rainbowgum)
+        module("pattern", "rainbowgum-pattern", Versions::Rainbowgum)
+        module("slf4j", "rainbowgum-slf4j", Versions::Rainbowgum)
+      }
     } // catalog("io")
 
     catalog("info.picocli") {
@@ -417,9 +431,8 @@ object Catalogs : CatalogsSupport() {
       group("platform") {
         module("platformApi", "jakarta.jakartaee-api", Versions::JakartaPlatform)
         module("platformApiBom", "jakarta.jakartaee-bom", Versions::JakartaPlatform)
-
       }
-    }
+    } // catalog("jakarta")
 
     catalog("javax") {
       library("inject", "javax.inject", "javax.inject", DefaultVersions.latestRelease)
@@ -434,6 +447,7 @@ object Catalogs : CatalogsSupport() {
   var commonsLogging by libs
   var log4jApi by libs
   var log4jCore by libs
+  var rainbowGum by libs
 
   private var kotlinJvmPlugin by plugins
   private var kotlinStdlib by libs

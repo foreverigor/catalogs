@@ -19,6 +19,7 @@ open class DefaultVersions(
   open var Log4j: String = latestRelease,
   open var Slf4j: String = "1.7.36",
   open var Logback: String = latestRelease,
+  open var Rainbowgum: String = latestRelease,
 
   open var Kotlin: String = latestRelease,
   open var KotlinX: String = latestRelease, // Doesn't follow Kotlin versioning
@@ -28,6 +29,8 @@ open class DefaultVersions(
   open var Jackson: String = latestRelease,
   open var Reflections: String = withoutVersion,
   open var Objenesis: String = withoutVersion,
+  open var Introspectable: String = latestRelease,
+  open var Durian: String = latestRelease,
 
   open var Jetty: String = withoutVersion,
   open var Netty: String = withoutVersion,
@@ -90,6 +93,7 @@ open class DefaultVersions(
   open var Jabel: String = latestRelease,
 
   open var JCommander: String = latestRelease,
+  open var Airline: String = latestRelease,
 
   open var JOOQ: String = latestRelease,
   open var JOOR: String = latestRelease,
