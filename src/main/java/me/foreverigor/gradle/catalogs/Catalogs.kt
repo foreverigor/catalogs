@@ -106,8 +106,8 @@ object Catalogs : CatalogsSupport() {
       group("github") {
         library("bsideup.jabel", "com.github.bsideup.jabel", "jabel-javac-plugin", Versions::Jabel)
         library("mwiede.jsch", "com.github.mwiede", "jsch", Versions::JSch)
-        library("airline", "com.github.rvesse", "airline", Versions::Airline)
-        library("airline3", "com.github.rvesse", "airline", Versions::Airline)
+        library("rvesse.airline", "com.github.rvesse", "airline", Versions::Airline)
+        library("rvesse.airline3", "com.github.rvesse", "airline", Versions::Airline)
       }
       library("beust.jcommander", "com.beust", "jcommander", Versions::JCommander)
 
