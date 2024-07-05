@@ -283,7 +283,7 @@ object Catalogs : CatalogsSupport() {
       module("jsoup", "jsoup", Versions::Jsoup)
     }
     catalog("org.jooq") {
-      plugin("jooqCodegen", "$prefix:jooq-codegen", Versions::JOOQ)
+      plugin("jooqCodegen", "$prefix.jooq-codegen-gradle", Versions::JOOQ)
       module("jooq", "jooq", Versions::JOOQ)
       module("joor", "joor", Versions::JOOR)
       module("jool", "jool", Versions::JOOL)
