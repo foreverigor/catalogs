@@ -23,7 +23,8 @@ open class CatalogVersions(
   open var Tinylog: String = latestRelease,
 
   open var Kotlin: String = latestRelease,
-  open var KotlinX: String = latestRelease, // Doesn't follow Kotlin versioning
+  // Doesn't follow Kotlin versioning
+  open var KotlinX: String = latestRelease,
   open var Guava: String = latestRelease,
   open var Gson: String = latestRelease,
   open var AutoService: String = latestRelease,
@@ -57,7 +58,7 @@ open class CatalogVersions(
   open var JakartaJsonB: String = withoutVersion,
   open var JakartaPlatform: String = withoutVersion,
 
-  open var Spring: String = latestRelease,
+  open var Spring: String = withoutVersion,
   open var SpringBoot: String = withoutVersion,
   /**
    * Important because plugin version is mandatory but we don't want to set the regular dependencies' version
@@ -114,6 +115,11 @@ open class CatalogVersions(
   open var Cglib: String = latestRelease,
   open var ByteBuddy: String = latestRelease,
   open var Javassist: String = latestRelease,
+
+  open var H2: String = latestRelease,
+  open var Hsqldb: String = latestRelease,
+  open var Postgres: String = latestRelease,
+  open var Sqlite: String = latestRelease,
 
   open var ToolchainsPlugin: String = latestRelease,
   open var ShadowJarPlugin: String = latestRelease,

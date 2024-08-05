@@ -113,6 +113,8 @@ object Catalogs : CatalogsSupport() {
       library("hierynomus.sshj", "com.hierynomus", "sshj", Versions::SshJ)
 
       library("diffplug.durian", "com.diffplug.durian", "durian", Versions::Durian)
+
+      library("h2database.h2", "com.h2database", "h2", Versions::H2)
     } // catalog("com")
 
     catalog("org") {
@@ -177,6 +179,10 @@ object Catalogs : CatalogsSupport() {
           module("rest", "spring-boot-starter-data-rest", Versions::SpringBoot)
         }
       }
+
+      library("postgresql.postgresql", "org.postgresql", "postgresql", Versions::Postgres)
+      library("xerial.sqlite", "org.xerial", "sqlite-jdbc", Versions::Sqlite)
+      library("hsqldb.hsqldb", "org.hsqldb", "hsqldb", Versions::Hsqldb)
     } // catalog("org")
     catalog("org.apache") {
       group("commons") {

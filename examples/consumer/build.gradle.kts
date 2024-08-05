@@ -29,6 +29,7 @@ dependencies {
 
   testImplementation(platform(org.junit.junit5Bom))
   testImplementation(org.junit.jupiter)
+  testRuntimeOnly(com.h2database.h2)
 }
 
 tasks.test {
