@@ -332,6 +332,12 @@ object Catalogs : CatalogsSupport() {
     catalog("org.ow2.asm") {
       module("asm", "asm", Versions::Asm)
     }
+    catalog("org.tinylog") {
+      module("api", "tinylog-api", Versions::Tinylog)
+      module("impl", "tinylog-impl", Versions::Tinylog)
+      module("slf4j", "slf4j-tinylog", Versions::Tinylog)
+      module("apiKotlin", "tinylog-api-kotlin", Versions::Tinylog)
+    }
     catalog("cglib") {
       module("nodep", "cglib-nodep", Versions::Cglib)
       module("cglib", "cglib", Versions::Cglib)

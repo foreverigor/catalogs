@@ -6,7 +6,7 @@
 package me.foreverigor.gradle.catalogs
 
 open class CatalogVersions(
-  // By making them open constructor properties we get the cake and eat it too: can override in subclass
+  // By making these open constructor properties we get the cake and eat it too: can override in subclass
   // or set in constructor
   open var ApacheCommons: String = latestRelease,
   open var ApacheCommonsIo: String = latestRelease,
@@ -20,6 +20,7 @@ open class CatalogVersions(
   open var Slf4j: String = "1.7.36",
   open var Logback: String = latestRelease,
   open var Rainbowgum: String = latestRelease,
+  open var Tinylog: String = latestRelease,
 
   open var Kotlin: String = latestRelease,
   open var KotlinX: String = latestRelease, // Doesn't follow Kotlin versioning

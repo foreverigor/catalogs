@@ -13,7 +13,7 @@ open class CatalogsPluginExtension {
 
   internal var versionsHasBeenSet: Boolean = false
 
-  companion object {
+  internal companion object {
     val NAME = Settings::gradleCatalogue.name
     val TYPE = CatalogsPluginExtension::class.java
   }
