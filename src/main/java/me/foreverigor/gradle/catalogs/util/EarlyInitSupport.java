@@ -8,7 +8,7 @@ public class EarlyInitSupport {
     maybeEarlyInit();
   }
 
-  protected static void maybeEarlyInit() {
+  private static void maybeEarlyInit() {
     var catalogs = Catalogs.INSTANCE;
     if (catalogs.isUnititialized()) {
       catalogs.init(null);

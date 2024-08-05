@@ -15,7 +15,7 @@ import org.gradle.api.plugins.PluginAware
 class CatalogsPlugin : Plugin<PluginAware> {
 
     companion object {
-        val Logger: Logger = Logging.getLogger(DefaultVersionCatalogBuilder::class.java)
+        val Logger: Logger = Logging.getLogger("me.foreverigor.gradle.CatalogsPlugin")
     }
     override fun apply(target: PluginAware) {
         if (target !is Settings) {

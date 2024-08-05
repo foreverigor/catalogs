@@ -68,11 +68,6 @@ public class Stubs {
       return null;
     }
 
-   /* @Override
-    public AliasBuilder alias(String alias) {
-      return null;
-    }*/
-
     @Override
     public LibraryAliasBuilder library(String alias, String group, String artifact) {
       return new StubAliasBuilder();
