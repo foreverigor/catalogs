@@ -5,12 +5,9 @@ rootProject.name = "catalogs-consumer"
 includeBuild("../")
 
 pluginManagement {
-    includeBuild("../")
+    includeBuild("../../.")
     repositories {
         gradlePluginPortal()
-    }
-    plugins {
-        // id("me.foreverigor.gradle.catalogue")
     }
 }
 

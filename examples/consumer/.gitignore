@@ -37,7 +37,3 @@ bin/
 *.ipr
 out/
 gen/
-
-# Ignored .idea, now unignore specific stuff
-!.idea/.gitignore
-
