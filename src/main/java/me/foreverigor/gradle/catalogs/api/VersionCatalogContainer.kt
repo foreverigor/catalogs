@@ -7,11 +7,11 @@ import java.util.function.Consumer
  */
 interface VersionCatalogContainer {
 
-    fun catalog(catalogName: String)
+  fun catalog(catalogName: String)
 
-    fun catalog(catalogName: String, catalogConsumer: VersionCatalog.() -> Unit)
+  fun catalog(catalogName: String, catalogConsumer: VersionCatalog.() -> Unit)
 
-    fun catalog(catalogName: String, catalogConsumer: Consumer<VersionCatalog>)
+  fun catalog(catalogName: String, catalogConsumer: Consumer<VersionCatalog>)
 
 } // interface VersionCatalogBuilder
 

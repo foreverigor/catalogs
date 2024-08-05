@@ -5,7 +5,7 @@
 
 package me.foreverigor.gradle.catalogs
 
-open class DefaultVersions(
+open class CatalogVersions(
   // By making them open constructor properties we get the cake and eat it too: can override in subclass
   // or set in constructor
   open var ApacheCommons: String = latestRelease,
@@ -126,4 +126,4 @@ open class DefaultVersions(
     const val latestRelease = "latest.release"
     const val withoutVersion = ""
   }
-} // class DefaultVersions
+} // class CatalogVersions

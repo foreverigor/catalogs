@@ -1,4 +1,4 @@
-package me.foreverigor.gradle.catalogs.alias;
+package me.foreverigor.gradle.catalogs.impl.alias;
 
 import me.foreverigor.gradle.catalogs.api.LibraryAlias;
 import me.foreverigor.gradle.catalogs.api.VersionCatalog;

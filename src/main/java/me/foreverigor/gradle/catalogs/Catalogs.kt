@@ -3,11 +3,10 @@ package me.foreverigor.gradle.catalogs
 import me.foreverigor.gradle.catalogs.Catalogs.Plugins.gradleToolchains
 import me.foreverigor.gradle.catalogs.Catalogs.Plugins.kordampSettings
 
-import me.foreverigor.gradle.catalogs.DefaultVersions
 import me.foreverigor.gradle.catalogs.api.VersionCatalogsConfiguration
 import me.foreverigor.gradle.catalogs.util.CatalogsSupport
 import me.foreverigor.gradle.catalogs.util.EarlyInitSupport
-import me.foreverigor.gradle.catalogs.DefaultVersions as Versions
+import me.foreverigor.gradle.catalogs.CatalogVersions as Versions
 
 @Suppress("MemberVisibilityCanBePrivate") // No
 object Catalogs : CatalogsSupport() {
@@ -436,19 +435,19 @@ object Catalogs : CatalogsSupport() {
     } // catalog("jakarta")
 
     catalog("javax") {
-      library("inject", "javax.inject", "javax.inject", DefaultVersions.latestRelease)
+      library("inject", "javax.inject", "javax.inject", Versions.latestRelease)
     }
   } // coordinates
 
   // Shared between catalogs (links):
-  var slf4jApi by libs
-  var slf4jImplSimple by libs
-  var slf4jLog4jImpl by libs
-  var logbackClassic by libs
-  var commonsLogging by libs
-  var log4jApi by libs
-  var log4jCore by libs
-  var rainbowGum by libs
+  private var slf4jApi by libs
+  private var slf4jImplSimple by libs
+  private var slf4jLog4jImpl by libs
+  private var logbackClassic by libs
+  private var commonsLogging by libs
+  private var log4jApi by libs
+  private var log4jCore by libs
+  private var rainbowGum by libs
 
   private var kotlinJvmPlugin by plugins
   private var kotlinStdlib by libs
@@ -472,7 +471,7 @@ object Catalogs : CatalogsSupport() {
   private var jupiterEngine by libs
   private var junit5Bom by libs
 
-  object Plugins : EarlyInitSupport() {
+  private object Plugins : EarlyInitSupport() {
     var gradleToolchains by plugins
     var kordampSettings by plugins
   }

@@ -2,6 +2,7 @@ package me.foreverigor.gradle.catalogs.link;
 
 import me.foreverigor.gradle.catalogs.api.LibraryAlias;
 import me.foreverigor.gradle.catalogs.api.VersionCatalog;
+
 import org.jetbrains.annotations.NotNull;
 
 public class GavLibraryAlias extends AbstractAliasLink implements LibraryAlias {

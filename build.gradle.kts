@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   java
   `java-gradle-plugin`
-  // `kotlin-dsl` // don't add this, does stuff to syntax
+  // `kotlin-dsl` // don't add this, does stuff to dsl syntax
   kotlin("jvm") version embeddedKotlinVersion
   `version-catalog` // for reference
 }
@@ -15,13 +15,19 @@ repositories {
   mavenCentral()
 }
 
+val javaVersion = JavaVersion.VERSION_11
+
 java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = javaVersion
+  targetCompatibility = javaVersion
+}
+
+tasks.withType<JavaCompile> {
+  options.compilerArgs.add("-Xlint:unchecked")
 }
 
 tasks.withType<KotlinCompile> {
-  kotlinOptions.jvmTarget = JavaVersion.VERSION_11.majorVersion
+  kotlinOptions.jvmTarget = java.targetCompatibility.majorVersion
 }
 
 gradlePlugin {
@@ -31,18 +37,17 @@ gradlePlugin {
   }
 }
 
-catalog {
+/* catalog {
   versionCatalog {
     version("kotlin2", "1.0.0")
   }
   versionCatalog {
     version("kotlin", "1.0.0")
-    // add dependencies and aliases here
     library("alias", "group", "artifact").version("version")
   }
-}
+} */
 
 dependencies {
-  testImplementation("junit", "junit", "4.12")
+  compileOnly(gradleApi())
   implementation(kotlin("stdlib"))
 }

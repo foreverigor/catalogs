@@ -5,7 +5,7 @@ import kotlin.jvm.functions.Function1;
 import kotlin.reflect.KProperty1;
 
 import me.foreverigor.gradle.CatalogsPlugin;
-import me.foreverigor.gradle.catalogs.DefaultVersions;
+import me.foreverigor.gradle.catalogs.CatalogVersions;
 import me.foreverigor.gradle.catalogs.api.*;
 
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
@@ -71,7 +71,7 @@ public class PrefixVersionCatalog implements VersionCatalog {
   public @NotNull LibraryAlias library(@NotNull String nestedAlias,
                                        @NotNull String group,
                                        @NotNull String artifact,
-                                       @NotNull KProperty1<DefaultVersions, String> version) {
+                                       @NotNull KProperty1<CatalogVersions, String> version) {
     var alias = DependencyAlias.forName(alias(nestedAlias))
       .group(group)
       .artifact(artifact)
@@ -82,7 +82,7 @@ public class PrefixVersionCatalog implements VersionCatalog {
 
   @NotNull
   @Override
-  public LibraryAlias module(@NotNull String nestedAlias, @NotNull String artifact, @NotNull KProperty1<DefaultVersions, String> version) {
+  public LibraryAlias module(@NotNull String nestedAlias, @NotNull String artifact, @NotNull KProperty1<CatalogVersions, String> version) {
     return library(nestedAlias, getPrefix(), artifact, version);
   }
 
@@ -92,7 +92,7 @@ public class PrefixVersionCatalog implements VersionCatalog {
     return log(nestedAlias, DependencyAlias.create(groupArtifactVersion).register(alias(nestedAlias), this));
   }
 
-  public @NotNull PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull KProperty1<DefaultVersions, String> version) {
+  public @NotNull PluginAlias plugin(@NotNull String nestedAlias, @NotNull String id, @NotNull KProperty1<CatalogVersions, String> version) {
     return log(nestedAlias, DependencyAlias.forName(alias(nestedAlias)).pluginId(id).version(version).register(this));
   }
 
@@ -132,7 +132,7 @@ public class PrefixVersionCatalog implements VersionCatalog {
 
   private <T> T log(String nestedAlias, T aliasTarget) {
     if (!(realCatalog instanceof Stub)) {
-      logger.info("registered alias '{}' for '{}' in catalog '{}'", alias(nestedAlias), aliasTarget, realCatalog.getName());
+      logger.debug("registered alias '{}' for '{}' in catalog '{}'", alias(nestedAlias), aliasTarget, realCatalog.getName());
     }
     return aliasTarget;
   }

@@ -1,6 +1,6 @@
 package me.foreverigor.gradle.catalogs.api
 
-import me.foreverigor.gradle.catalogs.DefaultVersions.Companion.withoutVersion
+import me.foreverigor.gradle.catalogs.CatalogVersions.Companion.withoutVersion
 import me.foreverigor.gradle.catalogs.impl.VersionRef
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder
 

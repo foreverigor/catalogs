@@ -40,7 +40,7 @@ public class VersionCatalogContainerConfiguration implements VersionCatalogConta
     @NotNull
     private static String[] splitPrefix(String catalogPrefix) {
         String[] packages = catalogPrefix.split("\\.");
-        if (packages.length == 0) throw new IllegalArgumentException("name");
+        if (packages.length == 0) throw new IllegalArgumentException("catalogPrefix name");
         return packages;
     }
 }

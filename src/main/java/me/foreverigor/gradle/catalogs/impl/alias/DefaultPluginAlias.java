@@ -1,12 +1,10 @@
-package me.foreverigor.gradle.catalogs.alias;
+package me.foreverigor.gradle.catalogs.impl.alias;
 
 import me.foreverigor.gradle.catalogs.api.PluginAlias;
 import me.foreverigor.gradle.catalogs.api.VersionCatalog;
 import me.foreverigor.gradle.catalogs.impl.DepVersion;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class DefaultPluginAlias extends AbstractAlias<AliasBuilder.PluginAliasBuilder, PluginAlias> implements PluginAlias {

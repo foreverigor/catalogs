@@ -1,18 +1,15 @@
-package me.foreverigor.gradle.catalogs.alias;
+package me.foreverigor.gradle.catalogs.impl.alias;
 
 import kotlin.reflect.KProperty1;
-import me.foreverigor.gradle.catalogs.DefaultVersions;
+import me.foreverigor.gradle.catalogs.CatalogVersions;
 import me.foreverigor.gradle.catalogs.api.*;
-import me.foreverigor.gradle.catalogs.impl.CatalogVersions;
+import me.foreverigor.gradle.catalogs.impl.DefaultCatalogVersions;
 import me.foreverigor.gradle.catalogs.impl.DepVersion;
 
 public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuilder<T, Self>> {
 
   Self version(String version);
-  Self version(KProperty1<DefaultVersions, String> version);
-
-  @SuppressWarnings("unused")
-  T build();
+  Self version(KProperty1<CatalogVersions, String> version);
 
   T register(VersionCatalog catalog);
 
@@ -41,7 +38,7 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
     }
 
     @Override
-    public Self version(KProperty1<DefaultVersions, String> version) {
+    public Self version(KProperty1<CatalogVersions, String> version) {
       this.version = DepVersion.fromRef(version);
       return self();
     }
@@ -56,8 +53,8 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
       return version;
     }
 
+    @SuppressWarnings("unchecked")
     protected Self self() {
-      //noinspection unchecked
       return (Self) this;
     }
   } // class AbstractAliasBuilder
@@ -81,11 +78,6 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
     }
 
     @Override
-    public DependencyAlias build() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
     public DependencyAlias register(VersionCatalog catalog) {
       throw new UnsupportedOperationException();
     }
@@ -101,11 +93,6 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
     public PluginAliasBuilder pluginId(String id) {
       this.pluginId = id;
       return self();
-    }
-
-    @Override
-    public PluginAlias build() {
-      return new DefaultPluginAlias(this, null);
     }
 
     @Override
@@ -138,12 +125,7 @@ public interface AliasBuilder<T extends DependencyAlias, Self extends AliasBuild
     }
 
     public LibraryAliasBuilder withoutVersion() {
-      return version(CatalogVersions.withoutVersion);
-    }
-
-    @Override
-    public LibraryAlias build() {
-      return new DefaultLibraryAlias(this, null);
+      return version(DefaultCatalogVersions.withoutVersion);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package me.foreverigor.gradle.catalogs.api;
 
-import me.foreverigor.gradle.catalogs.alias.AliasBuilder;
+import me.foreverigor.gradle.catalogs.impl.alias.AliasBuilder;
 import me.foreverigor.gradle.catalogs.link.GavLibraryAlias;
 import org.gradle.api.initialization.dsl.VersionCatalogBuilder;
 import org.jetbrains.annotations.NotNull;

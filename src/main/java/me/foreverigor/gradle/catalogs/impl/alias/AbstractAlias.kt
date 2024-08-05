@@ -1,9 +1,9 @@
-package me.foreverigor.gradle.catalogs.alias
+package me.foreverigor.gradle.catalogs.impl.alias
 
 import me.foreverigor.gradle.CatalogsPlugin
 import me.foreverigor.gradle.catalogs.api.DependencyAlias
 import me.foreverigor.gradle.catalogs.api.VersionCatalog
-import me.foreverigor.gradle.catalogs.impl.CatalogVersions
+import me.foreverigor.gradle.catalogs.impl.DefaultCatalogVersions
 import me.foreverigor.gradle.catalogs.impl.DepVersion
 import me.foreverigor.gradle.catalogs.impl.DepVersionReference
 import java.util.function.Consumer
@@ -21,14 +21,19 @@ abstract class AbstractAlias<B : AliasBuilder<T, *>, T : DependencyAlias> constr
   }
 
   private var myCatalog: VersionCatalog? = null
+
+  /**
+   * This is a map of catalog -> alias in which the alias has been registered
+   * It gets created only once and then passed around (sort of a singleton)
+   */
   protected val inCatalogs: MutableMap<VersionCatalog, T> by lazy { initMap(catalogMap) }
 
   protected abstract fun getDependencyString(): String
 
   protected fun maybeRegister(catalogToRegister: VersionCatalog?) {
-    if (catalogToRegister != null) {
-      register(name, catalogToRegister)
-      this.myCatalog = catalogToRegister
+    catalogToRegister?.let {
+      register(name, it)
+      this.myCatalog = it
     }
   }
 
@@ -38,10 +43,11 @@ abstract class AbstractAlias<B : AliasBuilder<T, *>, T : DependencyAlias> constr
 
   private fun registerInCatalog(catalog: VersionCatalog): T {
     val nameInOtherCatalog = otherCatalogPrefix + name
-    val copy = createCopy(nameInOtherCatalog)
-    copy.register(nameInOtherCatalog, catalog)
-    CatalogsPlugin.Logger.info("registered linked alias '{}' in catalog '{}'", this, catalog.realCatalog.name)
-    return copy
+    createCopy(nameInOtherCatalog).let {
+      it.register(nameInOtherCatalog, catalog)
+      CatalogsPlugin.Logger.debug("registered linked alias '{}' in catalog '{}'", this, catalog.realCatalog.name)
+      return it
+    }
   }
 
   protected abstract fun createCopy(withName: String): T
@@ -49,9 +55,9 @@ abstract class AbstractAlias<B : AliasBuilder<T, *>, T : DependencyAlias> constr
   private fun initMap(catalogMap: MutableMap<VersionCatalog, T>?): MutableMap<VersionCatalog, T> {
     if (catalogMap != null) return catalogMap
     val map = mutableMapOf<VersionCatalog, T>()
-    val regCatalog = myCatalog
-    if (regCatalog != null) {
-      map[regCatalog] = this as T
+    myCatalog?.let {
+      @Suppress("UNCHECKED_CAST")
+      map[it] = this as T
     }
     return map
   }
@@ -61,15 +67,14 @@ abstract class AbstractAlias<B : AliasBuilder<T, *>, T : DependencyAlias> constr
   }
 
   override fun register(alias: String, catalog: VersionCatalog): DependencyAlias {
-    if (myCatalog != null && name == alias) {
-      return this
+    if (myCatalog == null || name != alias) {
+      var isReference = false
+      if (version is DepVersionReference) {
+        DefaultCatalogVersions.registerVersion(version.version, catalog)
+        isReference = true
+      }
+      this.doRegister(alias, catalog, isReference).accept(version.get())
     }
-    var ref = false
-    if (version is DepVersionReference) {
-      CatalogVersions.registerVersion(version.version, catalog)
-      ref = true
-    }
-    this.doRegister(alias, catalog, ref).accept(version.get())
     return this
   }
 
