@@ -1,33 +1,40 @@
 plugins {
-    id("java")
-    // kotlin("jvm") version "1.9.23"
+  java
+  alias(org.plugins.jetbrains.kotlin.jvm)
 
-    alias(spring.plugins.springBoot)
-    alias(spring.plugins.dependencyManagement)
+  alias(spring.plugins.springBoot)
+  alias(spring.plugins.dependencyManagement)
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    gradlePluginPortal()
-    mavenCentral()
+  mavenCentral()
+  gradlePluginPortal()
+}
+
+java {
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
-    implementation(deps.bundles.logging.slf4j.slf4jLogback)
-    implementation(org.springframework.boot.web)
-    implementation(org.springframework.boot.webflux)
+  implementation(org.springframework.boot.web)
+  implementation(org.springframework.boot.webflux)
 
-    implementation(org.springframework.boot.actuator)
+  implementation(org.springframework.boot.actuator)
 
-    testImplementation(org.springframework.boot.test)
-    testImplementation(io.projectreactor.test)
+  testImplementation(org.springframework.boot.test)
+  testImplementation(io.projectreactor.test)
 
-    testImplementation(platform(org.junit.junit5))
-    testImplementation(org.junit.jupiter)
+  testImplementation(platform(org.junit.junit5Bom))
+  testImplementation(org.junit.jupiter)
 }
 
 tasks.test {
-    useJUnitPlatform()
+  useJUnitPlatform()
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+  kotlinOptions.jvmTarget = java.targetCompatibility.majorVersion
 }
