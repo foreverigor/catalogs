@@ -37,16 +37,6 @@ gradlePlugin {
   }
 }
 
-/* catalog {
-  versionCatalog {
-    version("kotlin2", "1.0.0")
-  }
-  versionCatalog {
-    version("kotlin", "1.0.0")
-    library("alias", "group", "artifact").version("version")
-  }
-} */
-
 dependencies {
   compileOnly(gradleApi())
   implementation(kotlin("stdlib"))
