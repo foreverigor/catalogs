@@ -9,6 +9,4 @@
 
 !/vcs.xml
 !/gradle.xml
-!/mavenServices.xml
-!/inspectionProfiles
 !/externalDependencies.xml
