@@ -188,7 +188,7 @@ object Catalogs : CatalogsSupport() {
         module("lang3", "commons-lang3", Versions::ApacheCommons)
         module("collections4", "commons-collections4", Versions::ApacheCommons)
       }
-      library("commons.io", "$prefix.commons-io", "commons-io", Versions::ApacheCommonsIo)
+      library("commons.io", "commons-io", "commons-io", Versions::ApacheCommonsIo)
 
       group("logging.log4j") {
         log4jCore = module("core", "log4j-core", Versions::Log4j)
